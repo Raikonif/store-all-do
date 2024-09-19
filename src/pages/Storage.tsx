@@ -20,7 +20,8 @@ const initialFiles: File[] = [
 ];
 
 function Storage() {
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const [files, setFiles] = useState<File[]>(initialFiles);
   const [searchTerm, setSearchTerm] = useState("");
 
