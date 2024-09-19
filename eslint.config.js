@@ -12,6 +12,7 @@ export default [
       "no-unused-vars": "warn",
       "no-undef": "warn",
       "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-unused-vars": "off" ,
     },
   },
 ];

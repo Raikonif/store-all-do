@@ -20,6 +20,7 @@ const initialFiles: File[] = [
 ];
 
 function Storage() {
+  // eslint-disable-next-line no-unused-vars
   const [files, setFiles] = useState<File[]>(initialFiles);
   const [searchTerm, setSearchTerm] = useState("");
 
