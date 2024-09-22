@@ -1,6 +1,6 @@
-import Login from "../pages/Login.tsx";
-import GeneralLayout from "../layouts/GeneralLayout.tsx";
-import Storage from "../pages/Storage.tsx";
+import Login from "@/pages/Login";
+import GeneralLayout from "@/layouts/GeneralLayout";
+import Storage from "@/pages/Storage";
 
 const GeneralRoutes = {
   path: "",

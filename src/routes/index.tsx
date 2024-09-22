@@ -1,4 +1,4 @@
-import GeneralRoutes from "./GeneralRoutes.tsx";
+import GeneralRoutes from "./GeneralRoutes";
 import { useRoutes } from "react-router-dom";
 
 function RoutesApp() {
