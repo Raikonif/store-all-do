@@ -5,19 +5,22 @@ import useFiles from "@/hooks/useFiles.tsx";
 import { FileDo } from "@/interfaces/FileDo.ts";
 
 function Storage() {
-  const [files, setFiles] = useState<FileDo[]>([]);
+  const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
   const [searchTerm, setSearchTerm] = useState("");
-
   const { filesQuery } = useFiles();
+  let filteredFiles = [];
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess) {
       setFiles(filesQuery.data);
     }
   };
-  const filteredFiles = files.filter((file) =>
-    file.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+
+  if (files.length > 0) {
+    filteredFiles = files.filter((file) =>
+      file.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }
 
   useEffect(() => {
     fetchingFiles();
