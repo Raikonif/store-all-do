@@ -11,7 +11,7 @@ function Storage() {
   const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
 
   const fetchingFiles = async () => {
-    if (filesQuery.isSuccess) {
+    if (filesQuery.isSuccess && filesQuery.data) {
       setFiles(filesQuery.data);
       setFilteredFiles(filesQuery.data);
     }
@@ -24,10 +24,12 @@ function Storage() {
         const filtered: FileDo[] = files.filter((file) =>
           file.name.toLowerCase().includes(searchTermString.toLowerCase()),
         );
-        setFilteredFiles(filtered);
-      } else {
+        setFilteredFiles([...filtered]);
+      } else if (searchTermString === "") {
         // If search term is empty, show all files
         setFilteredFiles(files);
+      } else {
+        setFilteredFiles([]);
       }
       console.log("filteredFiles", filteredFiles);
     },
@@ -75,7 +77,7 @@ function Storage() {
               </tr>
             </thead>
             <tbody>
-              <ListFilesView filteredFiles={filteredFiles.length > 0 ? filteredFiles : []} />
+              <ListFilesView filteredFiles={filteredFiles || []} />
             </tbody>
           </table>
         )}
