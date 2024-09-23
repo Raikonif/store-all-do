@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { DownloadCloud, SearchIcon } from "lucide-react";
+import { DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import useFiles from "@/hooks/useFiles.tsx";
 import { FileDo } from "@/interfaces/FileDo.ts";
+import Pagination from "@/components/Pagination.tsx";
 
 function Storage() {
   const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const [totalItems, setTotalItems] = useState(0);
   const { filesQuery } = useFiles();
 
   const fetchingFiles = async () => {
@@ -38,10 +42,7 @@ function Storage() {
   }, [filesQuery.isSuccess, filesQuery.isLoading]);
 
   useEffect(() => {
-    console.log("filteredFiles behavior", filteredFiles);
-  }, [filteredFiles]);
-
-  useEffect(() => {
+    setTotalItems(files.length);
     if (searchTerm === "") {
       setFilteredFiles(files);
     }
@@ -61,13 +62,16 @@ function Storage() {
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
-      <div className="my-4">
-        <button className="flex items-center justify-between gap-4 rounded-xl bg-cyan-400 p-2 font-bold text-white">
-          {"Descargar todos los archivos"}
+      <div className="my-4 flex justify-between gap-4 lg:flex-row lg:justify-center">
+        <button className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold text-white hover:bg-green-400 active:bg-green-300">
+          {"Subir Archivos"}
+          <UploadCloud className="text-white" size={20} />
+        </button>
+        <button className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300">
+          {"Descargar todo"}
           <DownloadCloud className="text-white" size={20} />
         </button>
       </div>
-
       <div className="overflow-x-auto">
         {filesQuery.isLoading ? (
           <p className="mt-4 text-center text-gray-500">Loading...</p>
@@ -86,6 +90,18 @@ function Storage() {
             <tbody>
               <ListFilesView filteredFiles={filteredFiles || []} />
             </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={4}>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalItems={totalItems}
+                    pageSize={pageSize}
+                    onPageChange={setCurrentPage}
+                  />
+                </td>
+              </tr>
+            </tfoot>
           </table>
         )}
       </div>
