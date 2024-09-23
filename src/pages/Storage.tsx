@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { DownloadCloud, SearchIcon } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
-import useFiles from "@/hooks/useFiles.tsx";
 import axios from "axios";
 
 type File = {
@@ -24,10 +23,9 @@ function Storage() {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const [files, setFiles] = useState<File[]>(initialFiles);
-  const [testFiles, setTestFiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filesQuery = useFiles();
+  // const filesQuery = useFiles();
 
   const fetchingFiles = async () => {
     const data = await axios.get("http://localhost:8000/api/files/");
