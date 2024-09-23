@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const getAllFiles = async (): Promise<FileDo[]> => {
   const { data } = await storeAPI.get<FileDo[]>("/api/files");
+  console.log("data", data);
   return data;
 };
 
