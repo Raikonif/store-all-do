@@ -11,6 +11,7 @@ function ListFilesView({ filteredFiles }: Props) {
   return (
     <>
       {filteredFiles &&
+        Array.isArray(filteredFiles) &&
         filteredFiles.length > 0 &&
         filteredFiles.map((file) => (
           <tr key={file.id} className="border-b last:border-b-0 hover:bg-gray-50">
