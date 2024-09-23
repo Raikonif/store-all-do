@@ -8,7 +8,7 @@ function Storage() {
   const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
   const [searchTerm, setSearchTerm] = useState("");
   const { filesQuery } = useFiles();
-  const [filteredFiles, setFilteredFiles] = useState<FileDo[]>([] as FileDo[]);
+  const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess) {

@@ -37,6 +37,13 @@ function ListFilesView({ filteredFiles }: Props) {
             </td>
           </tr>
         ))}
+      {filteredFiles.length === 0 && (
+        <tr>
+          <td colSpan={4} className="py-3 text-center text-gray-600">
+            No files found
+          </td>
+        </tr>
+      )}
     </>
   );
 }
