@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DownloadCloud, SearchIcon } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import useFiles from "@/hooks/useFiles.tsx";
@@ -8,19 +8,31 @@ function Storage() {
   const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
   const [searchTerm, setSearchTerm] = useState("");
   const { filesQuery } = useFiles();
-  let filteredFiles = [];
+  const [filteredFiles, setFilteredFiles] = useState<FileDo[]>([] as FileDo[]);
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess) {
       setFiles(filesQuery.data);
+      setFilteredFiles(filesQuery.data);
     }
   };
 
-  if (files.length > 0) {
-    filteredFiles = files.filter((file) =>
-      file.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }
+  const handleSearch = useCallback(
+    (searchTermString: string) => {
+      setSearchTerm(searchTermString);
+      if (searchTermString !== "" && files.length > 0) {
+        const filtered: FileDo[] = files.filter((file) =>
+          file.name.toLowerCase().includes(searchTermString.toLowerCase()),
+        );
+        setFilteredFiles(filtered);
+      } else {
+        // If search term is empty, show all files
+        setFilteredFiles(files);
+      }
+      console.log("filteredFiles", filteredFiles);
+    },
+    [files, filteredFiles],
+  );
 
   useEffect(() => {
     fetchingFiles();
@@ -35,7 +47,7 @@ function Storage() {
           type="text"
           placeholder="Search files..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
           className="w-full rounded-lg bg-gray-100 px-4 py-2 pl-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
