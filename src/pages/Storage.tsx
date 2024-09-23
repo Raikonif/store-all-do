@@ -18,7 +18,7 @@ function Storage() {
   };
 
   const handleSearch = useCallback(
-    (searchTermString: string) => {
+    (searchTermString?: string) => {
       setSearchTerm(searchTermString);
       if (files.length === 0) return;
       if (searchTermString !== "" && files.length > 0) {
@@ -40,6 +40,12 @@ function Storage() {
   useEffect(() => {
     console.log("filteredFiles behavior", filteredFiles);
   }, [filteredFiles]);
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredFiles(files);
+    }
+  }, [files, filteredFiles, searchTerm]);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
