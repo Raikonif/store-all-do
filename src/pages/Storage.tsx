@@ -84,7 +84,7 @@ function Storage() {
               </tr>
             </thead>
             <tbody>
-              <ListFilesView filteredFiles={files || []} />
+              <ListFilesView filteredFiles={filteredFiles || []} />
             </tbody>
           </table>
         )}
