@@ -1,35 +1,19 @@
 import { useEffect, useState } from "react";
 import { DownloadCloud, SearchIcon } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
-import axios from "axios";
-
-type File = {
-  id: string;
-  name: string;
-  type: "file" | "folder";
-  size: string;
-  modified: string;
-};
-
-const initialFiles: File[] = [
-  { id: "1", name: "Document.pdf", type: "file", size: "2.5 MB", modified: "2023-06-15" },
-  { id: "2", name: "Images", type: "folder", size: "-- MB", modified: "2023-06-14" },
-  { id: "3", name: "Spreadsheet.xlsx", type: "file", size: "1.8 MB", modified: "2023-06-13" },
-  { id: "4", name: "Presentation.pptx", type: "file", size: "5.2 MB", modified: "2023-06-12" },
-  { id: "5", name: "Notes.txt", type: "file", size: "10 KB", modified: "2023-06-11" },
-];
+import useFiles from "@/hooks/useFiles.tsx";
+import { FileDo } from "@/interfaces/FileDo.ts";
 
 function Storage() {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
-  const [files, setFiles] = useState<File[]>(initialFiles);
+  const [files, setFiles] = useState<FileDo[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // const filesQuery = useFiles();
+  const { filesQuery } = useFiles();
 
   const fetchingFiles = async () => {
-    const data = await axios.get("http://localhost:8000/api/files/");
-    console.log("getting data", data);
+    if (filesQuery.isSuccess) {
+      setFiles(filesQuery.data);
+    }
   };
   const filteredFiles = files.filter((file) =>
     file.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -37,7 +21,7 @@ function Storage() {
 
   useEffect(() => {
     fetchingFiles();
-  }, []);
+  }, [filesQuery.isSuccess, filesQuery.isLoading]);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
@@ -61,24 +45,26 @@ function Storage() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b text-left text-gray-600">
-              <th className="pb-2 font-semibold">Name</th>
-              <th className="pb-2 font-semibold">Size</th>
-              <th className="pb-2 font-semibold">Modified</th>
-              <th className="pb-2 font-semibold">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ListFilesView filteredFiles={filteredFiles || []} />
-          </tbody>
-        </table>
+        {filesQuery.isLoading ? (
+          <p className="mt-4 text-center text-gray-500">Loading...</p>
+        ) : filesQuery.isError ? (
+          <p className="mt-4 text-center text-gray-500">Error fetching files </p>
+        ) : (
+          <table className="w-full">
+            <thead>
+              <tr className="border-b text-left text-gray-600">
+                <th className="pb-2 font-semibold">Name</th>
+                <th className="pb-2 font-semibold">Size</th>
+                <th className="pb-2 font-semibold">Modified</th>
+                <th className="pb-2 font-semibold">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ListFilesView filteredFiles={filteredFiles || []} />
+            </tbody>
+          </table>
+        )}
       </div>
-
-      {filteredFiles.length === 0 && (
-        <p className="mt-4 text-center text-gray-500">No files found.</p>
-      )}
     </div>
   );
 }
