@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { DownloadCloud, FileIcon, FolderIcon, SearchIcon } from "lucide-react";
-import { IoRemoveCircleSharp } from "react-icons/io5";
-import { FaDownload } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { DownloadCloud, SearchIcon } from "lucide-react";
+import ListFilesView from "@/views/ListFilesView.tsx";
+import useFiles from "@/hooks/useFiles.tsx";
+import axios from "axios";
 
 type File = {
   id: string;
@@ -23,11 +24,22 @@ function Storage() {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const [files, setFiles] = useState<File[]>(initialFiles);
+  const [testFiles, setTestFiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const filesQuery = useFiles();
+
+  const fetchingFiles = async () => {
+    const data = await axios.get("http://localhost:8000/api/files/");
+    console.log("getting data", data);
+  };
   const filteredFiles = files.filter((file) =>
     file.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  useEffect(() => {
+    fetchingFiles();
+  }, []);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
@@ -61,32 +73,7 @@ function Storage() {
             </tr>
           </thead>
           <tbody>
-            {filteredFiles.map((file) => (
-              <tr key={file.id} className="border-b last:border-b-0 hover:bg-gray-50">
-                <td className="flex items-center py-3">
-                  {file.type === "folder" ? (
-                    <FolderIcon className="mr-2 text-yellow-500" size={20} />
-                  ) : (
-                    <FileIcon className="mr-2 text-blue-500" size={20} />
-                  )}
-                  {file.name}
-                </td>
-                <td className="py-3 text-gray-600">{file.size}</td>
-                <td className="py-3 text-gray-600">{file.modified}</td>
-                <td className="py-3 text-gray-600">
-                  {
-                    <div className="flex gap-20">
-                      <button>
-                        <FaDownload size={25} color={"green"} />
-                      </button>
-                      <button>
-                        <IoRemoveCircleSharp size={25} color={"red"} />
-                      </button>
-                    </div>
-                  }
-                </td>
-              </tr>
-            ))}
+            <ListFilesView filteredFiles={filteredFiles || []} />
           </tbody>
         </table>
       </div>
