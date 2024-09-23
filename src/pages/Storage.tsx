@@ -20,18 +20,15 @@ function Storage() {
   const handleSearch = useCallback(
     (searchTermString: string) => {
       setSearchTerm(searchTermString);
+      if (files.length === 0) return;
       if (searchTermString !== "" && files.length > 0) {
         const filtered: FileDo[] = files.filter((file) =>
           file.name.toLowerCase().includes(searchTermString.toLowerCase()),
         );
-        setFilteredFiles([...filtered]);
-      } else if (searchTermString === "") {
-        // If search term is empty, show all files
-        setFilteredFiles(files);
+        setFilteredFiles(filtered);
       } else {
-        setFilteredFiles([]);
+        setFilteredFiles(files);
       }
-      console.log("filteredFiles", filteredFiles);
     },
     [files, filteredFiles],
   );
@@ -39,6 +36,10 @@ function Storage() {
   useEffect(() => {
     fetchingFiles();
   }, [filesQuery.isSuccess, filesQuery.isLoading]);
+
+  useEffect(() => {
+    console.log("filteredFiles behavior", filteredFiles);
+  }, [filteredFiles]);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
