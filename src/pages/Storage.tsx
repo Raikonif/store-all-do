@@ -7,8 +7,8 @@ import { FileDo } from "@/interfaces/FileDo.ts";
 function Storage() {
   const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
   const [searchTerm, setSearchTerm] = useState("");
-  const { filesQuery } = useFiles();
   const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
+  const { filesQuery } = useFiles();
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess && filesQuery.data) {

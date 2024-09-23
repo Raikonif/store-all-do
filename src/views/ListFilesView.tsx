@@ -10,6 +10,13 @@ interface Props {
 function ListFilesView({ filteredFiles }: Props) {
   return (
     <>
+      {filteredFiles.length === 0 && (
+        <tr>
+          <td colSpan={4} className="py-3 text-center text-gray-600">
+            No files found
+          </td>
+        </tr>
+      )}
       {filteredFiles &&
         Array.isArray(filteredFiles) &&
         filteredFiles.length > 0 &&
@@ -39,13 +46,6 @@ function ListFilesView({ filteredFiles }: Props) {
             </td>
           </tr>
         ))}
-      {filteredFiles.length === 0 && (
-        <tr>
-          <td colSpan={4} className="py-3 text-center text-gray-600">
-            No files found
-          </td>
-        </tr>
-      )}
     </>
   );
 }
