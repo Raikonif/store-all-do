@@ -10,7 +10,8 @@ interface Props {
 function ListFilesView({ filteredFiles }: Props) {
   return (
     <>
-      {filteredFiles.length > 0 &&
+      {filteredFiles &&
+        filteredFiles.length > 0 &&
         filteredFiles.map((file) => (
           <tr key={file.id} className="border-b last:border-b-0 hover:bg-gray-50">
             <td className="flex items-center py-3">
