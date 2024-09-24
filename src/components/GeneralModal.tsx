@@ -21,7 +21,7 @@ function GeneralModal({ children, isOpen, onClose, title, modalRef }: Props) {
       >
         <div className="flex w-full flex-col">
           <div className="flex items-center justify-between rounded-t border-b border-gray-200 p-5">
-            <h3 className="text-xl font-semibold">{title}</h3>
+            <h3 className="font-semibold">{title}</h3>
             <button
               className="ml-auto border-0 bg-transparent p-1 text-2xl font-semibold leading-none text-gray-400 outline-none focus:outline-none"
               onClick={() => onClose(false)}
