@@ -2,12 +2,15 @@ import { FileIcon, FolderIcon } from "lucide-react";
 import { FaDownload } from "react-icons/fa";
 import { IoRemoveCircleSharp } from "react-icons/io5";
 import { FileDo } from "@/interfaces/FileDo.ts";
+import AdminContext from "@/context/AdminContext.tsx";
+import { useContext } from "react";
 
 interface Props {
   filteredFiles: FileDo[];
 }
 
 function ListFilesView({ filteredFiles }: Props) {
+  const { setIsOpenDelete } = useContext(AdminContext);
   return (
     <>
       {filteredFiles && Array.isArray(filteredFiles) && filteredFiles.length > 0 ? (
@@ -29,7 +32,7 @@ function ListFilesView({ filteredFiles }: Props) {
                   <button>
                     <FaDownload size={25} className="text-green-500" />
                   </button>
-                  <button>
+                  <button onClick={() => setIsOpenDelete(true)}>
                     <IoRemoveCircleSharp size={25} className="text-red-500" />
                   </button>
                 </div>
@@ -40,7 +43,7 @@ function ListFilesView({ filteredFiles }: Props) {
       ) : (
         <tr>
           <td colSpan={4} className="py-3 text-center text-gray-600">
-            No files found
+            No se encontraron archivos
           </td>
         </tr>
       )}

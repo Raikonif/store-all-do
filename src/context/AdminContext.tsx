@@ -1,9 +1,12 @@
 import { createContext } from "react";
+
 interface AdminContextData {
   isOpenUpload: boolean;
-  onOpenUpload: () => void;
-  onCloseUpload: () => void;
+  setIsOpenUpload: (open: boolean) => void;
+  isOpenDelete: boolean;
+  setIsOpenDelete: (open: boolean) => void;
 }
-const AdminContext = createContext({} as AdminContextData);
+
+const AdminContext = createContext<AdminContextData>({} as AdminContextData);
 
 export default AdminContext;
