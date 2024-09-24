@@ -34,7 +34,7 @@ function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) 
     return pageNumbers.slice(start - 1, end).map((page) => (
       <button
         key={page}
-        className={`rounded-xl px-3 py-1 ${page === currentPage ? "bg-blue-600 text-white" : "border-2 border-blue-600 text-blue-600"}`}
+        className={`rounded-xl px-3 py-1 ${page === currentPage ? "bg-green-500 text-white" : "border-2 border-green-500 text-green-500"}`}
         onClick={() => handlePageChange(page)}
       >
         <a onClick={() => handlePageChange(page)} className="">
@@ -46,9 +46,9 @@ function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) 
 
   return (
     <div className="flex w-full items-center justify-center gap-6 pt-4">
-      <ArrowLeftCircle className="text-blue-600" size={30} />
+      <ArrowLeftCircle className="text-green-500" size={30} />
       {renderPageNumbers()}
-      <ArrowRightCircle className="text-blue-600" size={30} />
+      <ArrowRightCircle className="text-green-500" size={30} />
     </div>
   );
 }

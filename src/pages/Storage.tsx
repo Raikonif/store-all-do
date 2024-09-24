@@ -55,7 +55,7 @@ function Storage() {
       <div className="relative mb-6">
         <input
           type="text"
-          placeholder="Search files..."
+          placeholder="Buscar archivos..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
           className="w-full rounded-lg bg-gray-100 px-4 py-2 pl-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,10 +80,10 @@ function Storage() {
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="border-b text-left text-gray-600">
-                <th className="pb-2 font-semibold">Name</th>
-                <th className="pb-2 font-semibold">Size</th>
-                <th className="pb-2 font-semibold">Modified</th>
+              <tr className="border-b-2 border-green-500 text-left text-gray-600">
+                <th className="pb-2 font-semibold">Nombre</th>
+                <th className="pb-2 font-semibold">Tamaño</th>
+                <th className="pb-2 font-semibold">Fecha de Creación</th>
                 <th className="pb-2 font-semibold">Acciones</th>
               </tr>
             </thead>

@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import UploadFilesModal from "@/components/UploadFilesModal.tsx";
 
 function GeneralLayout() {
   return (
@@ -10,6 +11,7 @@ function GeneralLayout() {
           className: "dark:bg-gray-800 dark:text-white",
         }}
       />
+      <UploadFilesModal />
     </div>
   );
 }
