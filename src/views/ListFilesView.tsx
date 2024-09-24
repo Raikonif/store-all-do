@@ -25,12 +25,12 @@ function ListFilesView({ filteredFiles }: Props) {
             <td className="py-3 text-gray-600">{file.type}</td>
             <td className="py-3 text-gray-600">
               {
-                <div className="flex gap-20">
+                <div className="flex gap-10">
                   <button>
-                    <FaDownload size={25} color={"green"} />
+                    <FaDownload size={25} className="text-green-500" />
                   </button>
                   <button>
-                    <IoRemoveCircleSharp size={25} color={"red"} />
+                    <IoRemoveCircleSharp size={25} className="text-red-500" />
                   </button>
                 </div>
               }
