@@ -1,9 +1,11 @@
-import { storeAPI } from "@/services/storeAPI.ts";
 import { FileDo } from "@/interfaces/FileDo.ts";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const getAllFiles = async (): Promise<FileDo[]> => {
-  const { data } = await storeAPI.get<FileDo[]>("/api/files");
+  const { data } = await axios.get<FileDo[]>(
+    "https://do-spaces-upload-docs.up.railway.app/api/files",
+  );
   console.log("data", data);
   return data;
 };
