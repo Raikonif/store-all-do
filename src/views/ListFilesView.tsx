@@ -16,17 +16,17 @@ function ListFilesView({ filteredFiles }: Props) {
       {filteredFiles && Array.isArray(filteredFiles) && filteredFiles.length > 0 ? (
         filteredFiles.map((file) => (
           <tr key={file.id} className="border-b last:border-b-0 hover:bg-gray-50">
-            <td className="flex items-center py-3">
+            <td className="flex items-center py-3 text-sm">
               {file.type === "folder" ? (
-                <FolderIcon className="mr-2 text-yellow-500" size={20} />
+                <FolderIcon className="mr-2 text-yellow-500" size={15} />
               ) : (
-                <FileIcon className="mr-2 text-blue-500" size={20} />
+                <FileIcon className="mr-2 text-blue-500" size={15} />
               )}
               {file.name}
             </td>
-            <td className="py-3 text-gray-600">{file.size}</td>
-            <td className="py-3 text-gray-600">{file.type}</td>
-            <td className="py-3 text-gray-600">
+            <td className="py-3 text-xs text-gray-600">{file.size}</td>
+            <td className="py-3 text-xs text-gray-600">{file.type}</td>
+            <td className="py-3 text-xs text-gray-600">
               {
                 <div className="flex gap-10">
                   <button>

@@ -11,7 +11,7 @@ const uploadToDOSpaces = async (formData: FormData): Promise<AxiosResponse> => {
   }
 };
 
-const deleteFromDOSpaces = async (filename: string): Promise<AxiosResponse> => {
+const deleteFromDOSpaces = async (filename: string | number): Promise<AxiosResponse> => {
   try {
     return await storeAPI.post("/api/files/delete", null, {
       params: {

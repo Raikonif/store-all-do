@@ -5,6 +5,7 @@ import useFiles from "@/hooks/useFiles.tsx";
 import { FileDo } from "@/interfaces/FileDo.ts";
 import Pagination from "@/components/Pagination.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
+import { deleteFromDOSpaces } from "@/services/do.service.ts";
 
 function Storage() {
   const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
@@ -21,6 +22,11 @@ function Storage() {
       setFiles(filesQuery.data);
       setFilteredFiles(filesQuery.data);
     }
+  };
+
+  const deleteCurrentFile = async (id: number) => {
+    await deleteFromDOSpaces(id);
+    setIsOpenUpload(false);
   };
 
   const handleSearch = useCallback(
@@ -52,7 +58,7 @@ function Storage() {
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
-      <h1 className="mb-6 text-2xl font-bold text-gray-800">File List</h1>
+      <h1 className="mb-3 text-2xl font-bold text-green-500">Lista de Archivos</h1>
 
       <div className="relative mb-6">
         <input
@@ -64,7 +70,7 @@ function Storage() {
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
-      <div className="my-4 flex justify-between gap-4 lg:flex-row lg:justify-center">
+      <div className="mb-4 flex justify-between gap-4 lg:flex-row lg:justify-end">
         <button
           onClick={() => setIsOpenUpload(true)}
           className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold text-white hover:bg-green-400 active:bg-green-300"
@@ -86,10 +92,10 @@ function Storage() {
           <table className="w-full">
             <thead>
               <tr className="border-b-2 border-green-500 text-left text-gray-600">
-                <th className="pb-2 font-semibold">Nombre</th>
-                <th className="pb-2 font-semibold">Tamaño</th>
-                <th className="pb-2 font-semibold">Fecha de Creación</th>
-                <th className="pb-2 font-semibold">Acciones</th>
+                <th className="pb-2 text-sm font-semibold">Nombre</th>
+                <th className="pb-2 text-sm font-semibold">Tamaño</th>
+                <th className="pb-2 text-sm font-semibold">Fecha de Creación</th>
+                <th className="pb-2 text-sm font-semibold">Acciones</th>
               </tr>
             </thead>
             <tbody>
