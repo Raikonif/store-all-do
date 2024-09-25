@@ -5,6 +5,7 @@ export interface FileDo {
   type: string;
   size: number;
   updatedAt: string;
+  createdAt: string;
 }
 
 export type FileDoOP = Partial<FileDo>;
