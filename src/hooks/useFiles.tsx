@@ -1,10 +1,9 @@
 import { FileDo } from "@/interfaces/FileDo.ts";
 import { useQuery } from "@tanstack/react-query";
-import { storeAPI } from "@/services/storeAPI.ts";
+import { getFiles } from "@/services/files.service.ts";
 
 const getAllFiles = async (): Promise<FileDo[]> => {
-  console.log("getting files");
-  const { data } = await storeAPI.get<FileDo[]>("/api/files");
+  const { data } = await getFiles();
   console.log("data", data);
   return data;
 };
@@ -18,4 +17,4 @@ function useFiles() {
   return { filesQuery };
 }
 
-export default useFiles;
+export { useFiles };

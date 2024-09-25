@@ -63,11 +63,6 @@ function UploadFilesModal() {
     }
   };
 
-  // const uploadFile = async () => {
-  //   const fileUploaded = await uploadFilesDO(fileExample);
-  //   await creatingFile(fileUploaded.data.file_url, fileExample);
-  // };
-
   const uploadFiles = async () => {
     await Promise.all(
       files.map(async (file) => {

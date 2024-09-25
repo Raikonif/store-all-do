@@ -1,11 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
-import useFiles from "@/hooks/useFiles.tsx";
+import { useFiles } from "@/hooks/useFiles.tsx";
 import { FileDo } from "@/interfaces/FileDo.ts";
 import Pagination from "@/components/Pagination.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
-// import { deleteFromDOSpaces } from "@/services/do.service.ts";
 
 function Storage() {
   const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
@@ -23,11 +22,6 @@ function Storage() {
       setFilteredFiles(filesQuery.data);
     }
   };
-
-  // const deleteCurrentFile = async (id: number) => {
-  //   await deleteFromDOSpaces(id);
-  //   setIsOpenUpload(false);
-  // };
 
   const handleSearch = useCallback(
     (searchTermString?: string) => {

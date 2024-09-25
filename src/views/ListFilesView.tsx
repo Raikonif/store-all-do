@@ -10,7 +10,13 @@ interface Props {
 }
 
 function ListFilesView({ filteredFiles }: Props) {
-  const { setIsOpenDelete } = useContext(AdminContext);
+  const { setIsOpenDelete, setCurrentItem } = useContext(AdminContext);
+
+  const handleOpenDelete = (file: FileDo) => {
+    setCurrentItem(file);
+    setIsOpenDelete(true);
+  };
+
   return (
     <>
       {filteredFiles && Array.isArray(filteredFiles) && filteredFiles.length > 0 ? (
@@ -29,10 +35,10 @@ function ListFilesView({ filteredFiles }: Props) {
             <td className="py-3 text-xs text-gray-600">
               {
                 <div className="flex gap-10">
-                  <button>
+                  <button onClick={() => {}}>
                     <FaDownload size={25} className="text-green-500" />
                   </button>
-                  <button onClick={() => setIsOpenDelete(true)}>
+                  <button onClick={() => handleOpenDelete(file)}>
                     <IoRemoveCircleSharp size={25} className="text-red-500" />
                   </button>
                 </div>
