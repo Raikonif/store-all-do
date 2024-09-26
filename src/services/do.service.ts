@@ -25,4 +25,23 @@ const deleteFromDOSpaces = async (filename: string): Promise<AxiosResponse> => {
   }
 };
 
-export { uploadToDOSpaces, deleteFromDOSpaces };
+const downloadFromDOSpaces = async (fileUrl: string): Promise<void> => {
+  try {
+    const response = await axios.get(`${BACKEND_URL}/api/files/${fileUrl}`, {
+      responseType: "blob", // Important for file download
+    });
+
+    // Create a link element to trigger download
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", fileUrl);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error("Error downloading file:", error);
+  }
+};
+
+export { uploadToDOSpaces, deleteFromDOSpaces, downloadFromDOSpaces };

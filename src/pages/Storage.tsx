@@ -52,7 +52,9 @@ function Storage() {
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
-      <h1 className="mb-3 text-2xl font-bold text-green-500">Lista de Archivos</h1>
+      <h1 className="mb-3 text-2xl font-bold text-green-500">
+        Almacenamiento de Archivos Privado - Raikonif
+      </h1>
 
       <div className="relative mb-6">
         <input
@@ -88,7 +90,7 @@ function Storage() {
               <tr className="border-b-2 border-green-500 text-left text-gray-600">
                 <th className="pb-2 text-sm font-semibold">Nombre</th>
                 <th className="pb-2 text-sm font-semibold">Tamaño</th>
-                <th className="pb-2 text-sm font-semibold">Fecha de Creación</th>
+                <th className="pb-2 text-sm font-semibold">Tipo de Archivo</th>
                 <th className="pb-2 text-sm font-semibold">Acciones</th>
               </tr>
             </thead>
