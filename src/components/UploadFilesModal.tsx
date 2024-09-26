@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, DragEvent, ChangeEvent } from "react";
+import { ChangeEvent, DragEvent, useContext, useRef, useState } from "react";
 import GeneralModal from "@/components/GeneralModal.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import uploadFilesDO from "@/helpers/uploadFilesDO.ts";
@@ -51,7 +51,7 @@ function UploadFilesModal() {
 
   const creatingFile = async (fileUrl: string, file: File) => {
     if (fileUrl) {
-      await createFile({
+      return await createFile({
         name: file.name,
         url: fileUrl,
         type: file.type,
@@ -59,6 +59,7 @@ function UploadFilesModal() {
       });
     } else {
       console.error("Error creating file");
+      return null;
     }
   };
 
@@ -69,19 +70,8 @@ function UploadFilesModal() {
       filesPrev.map(async (file) => {
         try {
           const fileUploaded = await uploadFilesDO(file);
-          await creatingFile(fileUploaded.data.file_url, file);
-          newFiles = [
-            ...newFiles,
-            {
-              name: file.name,
-              url: fileUploaded.data.file_url,
-              size: file.size,
-              type: file.type,
-              updatedAt: new Date().toISOString(),
-              createdAt: new Date().toISOString(),
-              id: fileUploaded.data.id,
-            },
-          ];
+          const fileCreated = await creatingFile(fileUploaded.data.file_url, file);
+          newFiles = [...newFiles, fileCreated.data];
         } catch (error) {
           console.error("Error uploading file:", error);
         }
