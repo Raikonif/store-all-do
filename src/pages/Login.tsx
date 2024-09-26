@@ -1,18 +1,30 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { ArrowBigDownDash } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { STORAGE } from "@/constants/general.constants.ts";
 
 function Login() {
   const [email, setEmail] = useState("");
+  const [openToken, setOpenToken] = useState(false);
   const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const navigate = useNavigate();
+
+  const sendTokenToEmail = async () => {
     setIsLoading(true);
-    // Here you would typically send the email and token to your authentication service
-    console.log("Login attempt with:", { email, token });
-    // Simulating an API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+      setOpenToken(true);
+    }, 2000);
+  };
+
+  const logIn = async () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate(STORAGE);
+    }, 2000);
   };
 
   return (
@@ -24,7 +36,7 @@ function Login() {
             Pon tu email e ingresa el codigo enviado a tu correo
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6">
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -42,11 +54,12 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="pb-4">
+            <div className="py-4">
               <button
-                type="submit"
+                type="button"
+                onClick={() => sendTokenToEmail()}
                 disabled={isLoading}
-                className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="group relative flex w-full justify-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-green-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <svg
@@ -73,7 +86,12 @@ function Login() {
                 {isLoading ? "Enviando Codigo a tu Correo..." : "Enviar Codigo"}
               </button>
             </div>
-            <div>
+            <div
+              className={`${!openToken && "hidden"} flex w-full animate-bounce items-center justify-center text-green-500`}
+            >
+              <ArrowBigDownDash />
+            </div>
+            <div className={`${!openToken && "hidden"}`}>
               <label htmlFor="token" className="sr-only">
                 Codigo Token
               </label>
@@ -90,12 +108,12 @@ function Login() {
               />
             </div>
           </div>
-
-          <div>
+          <div className={`${!openToken && "hidden"}`}>
             <button
-              type="submit"
+              type="button"
+              onClick={() => logIn()}
               disabled={isLoading}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <svg

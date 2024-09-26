@@ -11,7 +11,7 @@ interface Props {
 function GeneralModal({ children, isOpen, onClose, title, modalRef }: Props) {
   return (
     <div
-      className={`${!isOpen && "hidden"} fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none`}
+      className={`${!isOpen && "hidden"} fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none`}
     >
       <div className="fixed inset-0 bg-black opacity-50" onClick={() => onClose(false)}></div>
       <div

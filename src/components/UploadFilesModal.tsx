@@ -6,9 +6,8 @@ import { createFile } from "@/services/files.service.ts";
 
 function UploadFilesModal() {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { isOpenUpload, setIsOpenUpload } = useContext(AdminContext);
-  // const [fileExample, setFileExample] = useState<File>({} as File);
-  const [files, setFiles] = useState<File[]>([] as File[]);
+  const { isOpenUpload, setIsOpenUpload, setLoading, files, setFiles } = useContext(AdminContext);
+  const [filesPrev, setFilesPrev] = useState<File[]>([] as File[]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,19 +34,19 @@ function UploadFilesModal() {
     setIsDragging(false);
 
     const droppedFiles = Array.from(e.dataTransfer.files);
-    setFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
+    setFilesPrev((prevFiles) => [...prevFiles, ...droppedFiles]);
   };
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       // setFileExample(e.target.files[0]);
       const selectedFiles = Array.from(e.target.files);
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      setFilesPrev((prevFiles) => [...prevFiles, ...selectedFiles]);
     }
   };
 
   const removeFile = (index: number) => {
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setFilesPrev((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const creatingFile = async (fileUrl: string, file: File) => {
@@ -64,17 +63,33 @@ function UploadFilesModal() {
   };
 
   const uploadFiles = async () => {
+    setLoading(true);
+    let newFiles = [...files];
     await Promise.all(
-      files.map(async (file) => {
+      filesPrev.map(async (file) => {
         try {
           const fileUploaded = await uploadFilesDO(file);
           await creatingFile(fileUploaded.data.file_url, file);
+          newFiles = [
+            ...newFiles,
+            {
+              name: file.name,
+              url: fileUploaded.data.file_url,
+              size: file.size,
+              type: file.type,
+              updatedAt: new Date().toISOString(),
+              createdAt: new Date().toISOString(),
+              id: fileUploaded.data.id,
+            },
+          ];
         } catch (error) {
           console.error("Error uploading file:", error);
         }
       }),
     );
+    setFiles(newFiles);
     setIsOpenUpload(false);
+    setLoading(false);
   };
 
   return (
@@ -113,11 +128,11 @@ function UploadFilesModal() {
                 Seleccionar Archivos
               </button>
             </div>
-            {files.length > 0 && (
+            {filesPrev.length > 0 && (
               <div className="mt-6">
                 <h3 className="mb-2 font-semibold">Archivos Seleccionados:</h3>
                 <ul className="">
-                  {files.map((file, index) => (
+                  {filesPrev.map((file, index) => (
                     <li
                       key={index}
                       className={`${index % 2 === 0 ? "bg-slate-50" : "bg-green-100"} flex items-center justify-between rounded bg-gray-100 p-2`}

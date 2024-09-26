@@ -5,15 +5,16 @@ import { useFiles } from "@/hooks/useFiles.tsx";
 import { FileDo } from "@/interfaces/FileDo.ts";
 import Pagination from "@/components/Pagination.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
+import CircleProgress from "@/components/CircleProgress.tsx";
 
 function Storage() {
-  const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const [totalItems, setTotalItems] = useState(0);
-  const { setIsOpenUpload } = useContext(AdminContext);
+  const { setIsOpenUpload, files, setFiles, filteredFiles, setFilteredFiles } =
+    useContext(AdminContext);
+
   const { filesQuery } = useFiles();
 
   const fetchingFiles = async () => {
@@ -81,7 +82,7 @@ function Storage() {
       </div>
       <div className="overflow-x-auto">
         {filesQuery.isLoading ? (
-          <p className="mt-4 text-center text-gray-500">Cargando...</p>
+          <CircleProgress />
         ) : filesQuery.isError ? (
           <p className="mt-4 text-center text-gray-500">Error al traer los archivos </p>
         ) : (

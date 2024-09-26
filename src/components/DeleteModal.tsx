@@ -5,13 +5,18 @@ import { deleteFromDOSpaces } from "@/services/do.service.ts";
 import { deleteFile } from "@/services/files.service.ts";
 
 function DeleteModal() {
-  const { isOpenDelete, setIsOpenDelete, currentItem } = useContext(AdminContext);
+  const { isOpenDelete, setIsOpenDelete, currentItem, setLoading, files, setFiles } =
+    useContext(AdminContext);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const deleteCurrentFile = async () => {
+    setLoading(true);
     await deleteFromDOSpaces(currentItem.name);
     await deleteFile(currentItem.id);
+    const newList = files.filter((file) => file.id !== currentItem.id);
+    setFiles(newList);
     setIsOpenDelete(false);
+    setLoading(false);
   };
 
   return (

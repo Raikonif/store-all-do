@@ -7,8 +7,11 @@ interface Props {
 }
 
 function AdminProvider({ children }: Props) {
+  const [loading, setLoading] = useState(false);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
+  const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
   const [currentItem, setCurrentItem] = useState<FileDo>({} as FileDo);
 
   useEffect(() => {
@@ -23,6 +26,12 @@ function AdminProvider({ children }: Props) {
         setIsOpenDelete,
         currentItem,
         setCurrentItem,
+        loading,
+        setLoading,
+        files,
+        setFiles,
+        filteredFiles,
+        setFilteredFiles,
       }}
     >
       {children}
