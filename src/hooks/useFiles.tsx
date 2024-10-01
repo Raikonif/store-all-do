@@ -1,9 +1,11 @@
 import { FileDo } from "@/interfaces/FileDo.ts";
 import { useQuery } from "@tanstack/react-query";
 import { getFiles } from "@/services/files.service.ts";
+import { listDOObjects } from "@/services/do.service.ts";
 
 const getAllFiles = async (): Promise<FileDo[]> => {
-  const { data } = await getFiles();
+  const { data } = await listDOObjects();
+  // const { data } = await getFiles();
   console.log("data", data);
   return data;
 };

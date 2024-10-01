@@ -19,8 +19,8 @@ function Storage() {
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess && filesQuery.data) {
-      setFiles(filesQuery.data);
-      setFilteredFiles(filesQuery.data);
+      setFiles(filesQuery.data.Contents);
+      setFilteredFiles(filesQuery.data.Contents);
     }
   };
 
@@ -91,7 +91,7 @@ function Storage() {
               <tr className="border-b-2 border-green-500 text-left text-gray-600">
                 <th className="pb-2 text-sm font-semibold">Nombre</th>
                 <th className="pb-2 text-sm font-semibold">Tamaño</th>
-                <th className="pb-2 text-sm font-semibold">Tipo de Archivo</th>
+                <th className="pb-2 text-sm font-semibold">Modificado</th>
                 <th className="pb-2 text-sm font-semibold">Acciones</th>
               </tr>
             </thead>

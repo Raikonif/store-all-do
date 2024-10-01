@@ -1,6 +1,15 @@
 import axios, { AxiosResponse } from "axios";
 import { BACKEND_URL } from "@/constants/general.constants";
 
+const listDOObjects = async (): Promise<AxiosResponse> => {
+  try {
+    return await axios.get(BACKEND_URL + "/api/files/list_obj");
+  } catch (error) {
+    console.error("Error listing DigitalOcean Spaces objects:", error);
+    throw error;
+  }
+};
+
 const uploadToDOSpaces = async (formData: FormData): Promise<AxiosResponse> => {
   try {
     return await axios.post(BACKEND_URL + "/api/files/upload", formData, {
@@ -44,4 +53,4 @@ const downloadFromDOSpaces = async (fileUrl: string): Promise<void> => {
   }
 };
 
-export { uploadToDOSpaces, deleteFromDOSpaces, downloadFromDOSpaces };
+export { listDOObjects, uploadToDOSpaces, deleteFromDOSpaces, downloadFromDOSpaces };
