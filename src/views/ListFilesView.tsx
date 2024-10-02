@@ -1,48 +1,39 @@
 import { Download, Eye, FileIcon, FolderIcon, Trash } from "lucide-react";
-import { FileDo } from "@/interfaces/FileDo.ts";
 import AdminContext from "@/context/AdminContext.tsx";
 import { useContext, useState } from "react";
 import { downloadFromDOSpaces, listDOObjects } from "@/services/do.service.ts";
 import { DO_SPACES_URL } from "@/constants/general.constants.ts";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate.ts";
+import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 
 interface Props {
-  filteredFiles: any[];
-  filteredFolders: any[];
+  filteredFiles: IFile[];
+  filteredFolders: IFolder[];
 }
 
 function ListFilesView({ filteredFiles }: Props) {
-  const {
-    setIsOpenDelete,
-    setCurrentItem,
-    setFilteredFiles,
-    filteredFolders,
-    setFiles,
-    setFolders,
-    setCurrentPath,
-  } = useContext(AdminContext);
-  const [tempItem, setTempItem] = useState<FileDo>({} as FileDo);
+  const { setIsOpenDelete, setCurrentItem, filteredFolders, setFiles, setFolders, setCurrentPath } =
+    useContext(AdminContext);
+  const [tempItem, setTempItem] = useState<IFile>({} as IFile);
 
-  const navigateToFolder = async (folder: string) => {
-    console.log("navigate to folder", folder);
+  const navigateToFolder = async (folder: IFolder) => {
     setCurrentPath(folder.Prefix);
     const { data } = await listDOObjects(folder.Prefix);
     setFolders(data.folders);
     setFiles(data.files);
-    console.log("folders and files", data);
   };
 
-  const handleOpenDelete = (file: FileDo, e) => {
+  const handleOpenDelete = (file: IFile, e) => {
     e.stopPropagation();
     setCurrentItem(file);
     setIsOpenDelete(true);
   };
 
   const downloadFile = async () => {
-    await downloadFromDOSpaces(tempItem.name);
+    await downloadFromDOSpaces(tempItem.Key.split("/").pop());
   };
 
-  const openFile = (file: any) => {
+  const openFile = (file: IFile) => {
     window.open(DO_SPACES_URL + "/" + file.Key, "_blank");
   };
 

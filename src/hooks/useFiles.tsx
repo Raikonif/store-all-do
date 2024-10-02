@@ -1,7 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { listDOObjects } from "@/services/do.service.ts";
+import { IFilesAndFolders } from "@/interfaces/DOFileFolder.ts";
 
-const getAllFiles = async (dir: string): Promise<any> => {
+const getAllFiles = async (dir: string): Promise<IFilesAndFolders> => {
   const { data } = await listDOObjects(dir);
   // const { data } = await getFiles();
   console.log("data", data);

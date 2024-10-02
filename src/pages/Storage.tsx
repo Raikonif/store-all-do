@@ -2,10 +2,10 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { ArrowLeftCircle, DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
-import { FileDo } from "@/interfaces/FileDo.ts";
 import Pagination from "@/components/Pagination.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import CircleProgress from "@/components/CircleProgress.tsx";
+import { IFile } from "@/interfaces/DOFileFolder.ts";
 
 function Storage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,11 +40,19 @@ function Storage() {
     (searchTermString?: string) => {
       setSearchTerm(searchTermString);
       if (files.length === 0) return;
-      if (searchTermString !== "" && files.length > 0) {
-        const filtered: FileDo[] = files.filter((file) =>
-          file.name.toLowerCase().includes(searchTermString.toLowerCase()),
+      if (searchTermString !== "" && (files.length > 0 || folders.length > 0)) {
+        const filtered: IFile[] = files.filter((file) =>
+          file.Key.split("/").pop().toLowerCase().includes(searchTermString.toLowerCase()),
+        );
+        const filteredFolders = folders.filter((folder) =>
+          folder.Prefix.slice(0, -1)
+            .split("/")
+            .pop()
+            .toLowerCase()
+            .includes(searchTermString.toLowerCase()),
         );
         setFilteredFiles(filtered);
+        setFilteredFolders(filteredFolders);
       } else {
         setFilteredFiles(files);
         setFilteredFolders(folders);

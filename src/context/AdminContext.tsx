@@ -1,23 +1,23 @@
 import { createContext } from "react";
-import { FileDo } from "@/interfaces/FileDo.ts";
+import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 
 interface AdminContextData {
   isOpenUpload: boolean;
   setIsOpenUpload: (open: boolean) => void;
   isOpenDelete: boolean;
   setIsOpenDelete: (open: boolean) => void;
-  currentItem: FileDo;
-  setCurrentItem: (item: FileDo) => void;
+  currentItem: IFile;
+  setCurrentItem: (item: IFile) => void;
   loading: boolean;
   setLoading: (load: boolean) => void;
-  files: FileDo[];
-  setFiles: (files: FileDo[]) => void;
-  filteredFiles: FileDo[];
-  setFilteredFiles: (files: FileDo[]) => void;
-  folders: any[];
-  setFolders: (folders: any[]) => void;
-  filteredFolders: any[];
-  setFilteredFolders: (folders: any[]) => void;
+  files: IFile[];
+  setFiles: (files: IFile[]) => void;
+  filteredFiles: IFile[];
+  setFilteredFiles: (files: IFile[]) => void;
+  folders: IFolder[];
+  setFolders: (folders: IFolder[]) => void;
+  filteredFolders: IFolder[];
+  setFilteredFolders: (folders: IFolder[]) => void;
   currentPath: string;
   setCurrentPath: (path: string) => void;
 }
