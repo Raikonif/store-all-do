@@ -14,6 +14,12 @@ interface AdminContextData {
   setFiles: (files: FileDo[]) => void;
   filteredFiles: FileDo[];
   setFilteredFiles: (files: FileDo[]) => void;
+  folders: any[];
+  setFolders: (folders: any[]) => void;
+  filteredFolders: any[];
+  setFilteredFolders: (folders: any[]) => void;
+  currentPath: string;
+  setCurrentPath: (path: string) => void;
 }
 
 const AdminContext = createContext<AdminContextData>({} as AdminContextData);

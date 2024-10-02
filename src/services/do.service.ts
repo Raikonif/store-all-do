@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { BACKEND_URL } from "@/constants/general.constants";
 
-const listDOObjects = async (): Promise<AxiosResponse> => {
+const listDOObjects = async (path?: string): Promise<AxiosResponse> => {
   try {
-    return await axios.get(BACKEND_URL + "/api/files/list_obj");
+    return await axios.get(BACKEND_URL + `/api/files/list_obj?prefix_dir=${path}`);
   } catch (error) {
     console.error("Error listing DigitalOcean Spaces objects:", error);
     throw error;

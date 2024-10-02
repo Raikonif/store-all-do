@@ -10,13 +10,19 @@ function AdminProvider({ children }: Props) {
   const [loading, setLoading] = useState(false);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
-  const [files, setFiles] = useState<FileDo[]>([] as FileDo[]);
-  const [filteredFiles, setFilteredFiles] = useState<FileDo[]>(files);
+  const [files, setFiles] = useState<any[]>([] as any[]);
+  const [folders, setFolders] = useState<any[]>([] as any[]);
+  const [filteredFolders, setFilteredFolders] = useState<any[]>(folders);
+  const [filteredFiles, setFilteredFiles] = useState<any[]>(files);
   const [currentItem, setCurrentItem] = useState<FileDo>({} as FileDo);
+  const [currentPath, setCurrentPath] = useState("nandy-files/");
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     console.log("current item", currentItem);
   }, [currentItem]);
+
   return (
     <AdminContext.Provider
       value={{
@@ -32,6 +38,12 @@ function AdminProvider({ children }: Props) {
         setFiles,
         filteredFiles,
         setFilteredFiles,
+        folders,
+        setFolders,
+        filteredFolders,
+        setFilteredFolders,
+        currentPath,
+        setCurrentPath,
       }}
     >
       {children}

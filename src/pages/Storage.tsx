@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
+import { ArrowLeftCircle, DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
 import { FileDo } from "@/interfaces/FileDo.ts";
@@ -12,15 +12,27 @@ function Storage() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const [totalItems, setTotalItems] = useState(0);
-  const { setIsOpenUpload, files, setFiles, filteredFiles, setFilteredFiles } =
-    useContext(AdminContext);
+  const {
+    setIsOpenUpload,
+    files,
+    setFiles,
+    filteredFiles,
+    setFilteredFiles,
+    filteredFolders,
+    setFilteredFolders,
+    folders,
+    setFolders,
+    currentPath,
+    setCurrentPath,
+  } = useContext(AdminContext);
 
-  const { filesQuery } = useFiles();
+  const { filesQuery, forceRefetch } = useFiles({ dir: currentPath });
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess && filesQuery.data) {
-      setFiles(filesQuery.data.Contents);
-      setFilteredFiles(filesQuery.data.Contents);
+      setFiles(filesQuery.data.files);
+      setFolders(filesQuery.data.folders);
+      console.log("folders and files", filesQuery.data);
     }
   };
 
@@ -35,21 +47,33 @@ function Storage() {
         setFilteredFiles(filtered);
       } else {
         setFilteredFiles(files);
+        setFilteredFolders(folders);
       }
     },
-    [files, filteredFiles],
+    [files, filteredFiles, folders, filteredFolders],
   );
+
+  const handleBackButton = () => {
+    const parentPath = currentPath.split("/").slice(0, -2).join("/") + "/";
+    setCurrentPath(parentPath);
+    forceRefetch();
+  };
 
   useEffect(() => {
     fetchingFiles();
-  }, [filesQuery.isSuccess, filesQuery.isLoading]);
+  }, [filesQuery.isSuccess, filesQuery.isLoading, filesQuery.data]);
 
   useEffect(() => {
     setTotalItems(files.length);
     if (searchTerm === "") {
       setFilteredFiles(files);
+      setFilteredFolders(folders);
     }
-  }, [files, filteredFiles, searchTerm]);
+  }, [files, folders, searchTerm]);
+
+  useEffect(() => {
+    console.log("current path", currentPath);
+  }, [currentPath]);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
@@ -86,31 +110,44 @@ function Storage() {
         ) : filesQuery.isError ? (
           <p className="mt-4 text-center text-gray-500">Error al traer los archivos </p>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b-2 border-green-500 text-left text-gray-600">
-                <th className="pb-2 text-sm font-semibold">Nombre</th>
-                <th className="pb-2 text-sm font-semibold">Tamaño</th>
-                <th className="pb-2 text-sm font-semibold">Modificado</th>
-                <th className="pb-2 text-sm font-semibold">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ListFilesView filteredFiles={filteredFiles || []} />
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={4}>
-                  <Pagination
-                    currentPage={currentPage}
-                    totalItems={totalItems}
-                    pageSize={pageSize}
-                    onPageChange={setCurrentPage}
-                  />
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+          <div className="flex flex-col">
+            <div className={`${currentPath === "nandy-files/" && "hidden"}`}>
+              <button
+                onClick={() => handleBackButton()}
+                className="flex gap-2 rounded-xl bg-green-500 p-2 text-center text-white"
+              >
+                <ArrowLeftCircle /> {"Ir atras"}
+              </button>
+            </div>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b-2 border-green-500 text-left text-gray-600">
+                  <th className="pb-2 text-sm font-semibold">Nombre</th>
+                  <th className="pb-2 text-sm font-semibold">Tamaño</th>
+                  <th className="pb-2 text-sm font-semibold">Modificado</th>
+                  <th className="pb-2 text-sm font-semibold">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ListFilesView
+                  filteredFiles={filteredFiles || []}
+                  filteredFolders={filteredFolders || []}
+                />
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={4}>
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={totalItems}
+                      pageSize={pageSize}
+                      onPageChange={setCurrentPage}
+                    />
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         )}
       </div>
     </div>

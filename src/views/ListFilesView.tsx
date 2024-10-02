@@ -2,25 +2,34 @@ import { Download, Eye, FileIcon, FolderIcon, Trash } from "lucide-react";
 import { FileDo } from "@/interfaces/FileDo.ts";
 import AdminContext from "@/context/AdminContext.tsx";
 import { useContext, useState } from "react";
-import { downloadFromDOSpaces } from "@/services/do.service.ts";
+import { downloadFromDOSpaces, listDOObjects } from "@/services/do.service.ts";
 import { DO_SPACES_URL } from "@/constants/general.constants.ts";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate.ts";
 
 interface Props {
-  filteredFiles: FileDo[];
+  filteredFiles: any[];
+  filteredFolders: any[];
 }
 
 function ListFilesView({ filteredFiles }: Props) {
-  const { setIsOpenDelete, setCurrentItem } = useContext(AdminContext);
+  const {
+    setIsOpenDelete,
+    setCurrentItem,
+    setFilteredFiles,
+    filteredFolders,
+    setFiles,
+    setFolders,
+    setCurrentPath,
+  } = useContext(AdminContext);
   const [tempItem, setTempItem] = useState<FileDo>({} as FileDo);
 
-  const openFolder = (key) => {
-    if (key && key.endsWith("/")) {
-      console.log("open folder", key);
-    }
-  };
-  const navigateToFolder = (folder: string) => {
-    console.log("navigate", folder);
+  const navigateToFolder = async (folder: string) => {
+    console.log("navigate to folder", folder);
+    setCurrentPath(folder.Prefix);
+    const { data } = await listDOObjects(folder.Prefix);
+    setFolders(data.folders);
+    setFiles(data.files);
+    console.log("folders and files", data);
   };
 
   const handleOpenDelete = (file: FileDo, e) => {
@@ -39,12 +48,34 @@ function ListFilesView({ filteredFiles }: Props) {
 
   return (
     <>
+      {filteredFolders && Array.isArray(filteredFolders) && filteredFolders.length > 0 ? (
+        filteredFolders.map((folder, index) => (
+          <tr
+            key={index}
+            className="border-b last:border-b-0 hover:bg-gray-100"
+            onClick={() => navigateToFolder(folder)}
+          >
+            <td className="flex items-center py-3 text-sm">
+              <FolderIcon className="mr-2 text-yellow-500" size={15} />
+              {folder.Prefix.slice(0, -1).split("/").pop()}
+            </td>
+            <td className="py-3 text-xs text-gray-600">-</td>
+            <td className="py-3 text-xs text-gray-600">-</td>
+            <td className="py-3 text-xs text-gray-600">-</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={4} className="py-3 text-center text-gray-600">
+            No se encontraron carpetas
+          </td>
+        </tr>
+      )}
       {filteredFiles && Array.isArray(filteredFiles) && filteredFiles.length > 0 ? (
         filteredFiles.map((file, index) => (
           <tr
             key={index}
             className={`${file.Key.endsWith("/") && "cursor-pointer"} border-b last:border-b-0 hover:bg-gray-100`}
-            onClick={() => openFolder(file.Key)}
             onMouseEnter={() => setTempItem(file)}
           >
             <td className="flex items-center py-3 text-sm">

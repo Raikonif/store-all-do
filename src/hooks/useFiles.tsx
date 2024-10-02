@@ -1,22 +1,28 @@
-import { FileDo } from "@/interfaces/FileDo.ts";
-import { useQuery } from "@tanstack/react-query";
-import { getFiles } from "@/services/files.service.ts";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { listDOObjects } from "@/services/do.service.ts";
 
-const getAllFiles = async (): Promise<FileDo[]> => {
-  const { data } = await listDOObjects();
+const getAllFiles = async (dir: string): Promise<any> => {
+  const { data } = await listDOObjects(dir);
   // const { data } = await getFiles();
   console.log("data", data);
   return data;
 };
 
-function useFiles() {
+interface Props {
+  dir: string;
+}
+
+function useFiles({ dir }: Props) {
   const filesQuery = useQuery({
-    queryKey: ["files"],
-    queryFn: getAllFiles,
+    queryKey: ["files", dir],
+    queryFn: () => getAllFiles(dir),
     staleTime: 1000 * 60 * 5,
+    enabled: !!dir,
   });
-  return { filesQuery };
+  const forceRefetch = () => {
+    filesQuery.refetch();
+  };
+  return { filesQuery, forceRefetch };
 }
 
 export { useFiles };
