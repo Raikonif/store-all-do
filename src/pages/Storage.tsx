@@ -1,26 +1,39 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
+import { ArrowLeftCircle, FolderPlus, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
-import { FileDo } from "@/interfaces/FileDo.ts";
 import Pagination from "@/components/Pagination.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import CircleProgress from "@/components/CircleProgress.tsx";
+import { IFile } from "@/interfaces/DOFileFolder.ts";
 
 function Storage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const [totalItems, setTotalItems] = useState(0);
-  const { setIsOpenUpload, files, setFiles, filteredFiles, setFilteredFiles } =
-    useContext(AdminContext);
+  const {
+    setIsOpenFolder,
+    setIsOpenUpload,
+    files,
+    setFiles,
+    filteredFiles,
+    setFilteredFiles,
+    filteredFolders,
+    setFilteredFolders,
+    folders,
+    setFolders,
+    currentPath,
+    setCurrentPath,
+  } = useContext(AdminContext);
 
-  const { filesQuery } = useFiles();
+  const { filesQuery, forceRefetch } = useFiles({ dir: currentPath });
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess && filesQuery.data) {
-      setFiles(filesQuery.data);
-      setFilteredFiles(filesQuery.data);
+      setFiles(filesQuery.data.files);
+      setFolders(filesQuery.data.folders);
+      console.log("folders and files", filesQuery.data);
     }
   };
 
@@ -28,28 +41,48 @@ function Storage() {
     (searchTermString?: string) => {
       setSearchTerm(searchTermString);
       if (files.length === 0) return;
-      if (searchTermString !== "" && files.length > 0) {
-        const filtered: FileDo[] = files.filter((file) =>
-          file.name.toLowerCase().includes(searchTermString.toLowerCase()),
+      if (searchTermString !== "" && (files.length > 0 || folders.length > 0)) {
+        const filtered: IFile[] = files.filter((file) =>
+          file.Key.split("/").pop().toLowerCase().includes(searchTermString.toLowerCase()),
+        );
+        const filteredFolders = folders.filter((folder) =>
+          folder.Prefix.slice(0, -1)
+            .split("/")
+            .pop()
+            .toLowerCase()
+            .includes(searchTermString.toLowerCase()),
         );
         setFilteredFiles(filtered);
+        setFilteredFolders(filteredFolders);
       } else {
         setFilteredFiles(files);
+        setFilteredFolders(folders);
       }
     },
-    [files, filteredFiles],
+    [files, filteredFiles, folders, filteredFolders],
   );
+
+  const handleBackButton = () => {
+    const parentPath = currentPath.split("/").slice(0, -2).join("/") + "/";
+    setCurrentPath(parentPath);
+    forceRefetch();
+  };
 
   useEffect(() => {
     fetchingFiles();
-  }, [filesQuery.isSuccess, filesQuery.isLoading]);
+  }, [filesQuery.isSuccess, filesQuery.isLoading, filesQuery.data]);
 
   useEffect(() => {
     setTotalItems(files.length);
     if (searchTerm === "") {
       setFilteredFiles(files);
+      setFilteredFolders(folders);
     }
-  }, [files, filteredFiles, searchTerm]);
+  }, [files, folders, searchTerm]);
+
+  useEffect(() => {
+    console.log("current path", currentPath);
+  }, [currentPath]);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
@@ -75,9 +108,12 @@ function Storage() {
           {"Subir Archivos"}
           <UploadCloud className="text-white" size={20} />
         </button>
-        <button className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300">
-          {"Descargar todo"}
-          <DownloadCloud className="text-white" size={20} />
+        <button
+          onClick={() => setIsOpenFolder(true)}
+          className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300"
+        >
+          {"Crear Carpeta"}
+          <FolderPlus className="text-white" size={20} />
         </button>
       </div>
       <div className="overflow-x-auto">
@@ -86,31 +122,44 @@ function Storage() {
         ) : filesQuery.isError ? (
           <p className="mt-4 text-center text-gray-500">Error al traer los archivos </p>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b-2 border-green-500 text-left text-gray-600">
-                <th className="pb-2 text-sm font-semibold">Nombre</th>
-                <th className="pb-2 text-sm font-semibold">Tamaño</th>
-                <th className="pb-2 text-sm font-semibold">Tipo de Archivo</th>
-                <th className="pb-2 text-sm font-semibold">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ListFilesView filteredFiles={filteredFiles || []} />
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={4}>
-                  <Pagination
-                    currentPage={currentPage}
-                    totalItems={totalItems}
-                    pageSize={pageSize}
-                    onPageChange={setCurrentPage}
-                  />
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+          <div className="flex flex-col">
+            <div className={`${currentPath === "nandy-files/" && "invisible"}`}>
+              <button
+                onClick={() => handleBackButton()}
+                className="flex gap-2 rounded-xl bg-green-500 p-3 text-center font-semibold text-white hover:bg-green-400 active:bg-green-300"
+              >
+                <ArrowLeftCircle /> {"Ir atras"}
+              </button>
+            </div>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b-2 border-green-500 text-left text-gray-600">
+                  <th className="pb-2 text-sm font-semibold">Nombre</th>
+                  <th className="pb-2 text-sm font-semibold">Tamaño</th>
+                  <th className="pb-2 text-sm font-semibold">Modificado</th>
+                  <th className="pb-2 text-sm font-semibold">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ListFilesView
+                  filteredFiles={filteredFiles || []}
+                  filteredFolders={filteredFolders || []}
+                />
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={4}>
+                    <Pagination
+                      currentPage={currentPage}
+                      totalItems={totalItems}
+                      pageSize={pageSize}
+                      onPageChange={setCurrentPage}
+                    />
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         )}
       </div>
     </div>

@@ -1,22 +1,56 @@
 import GeneralModal from "@/components/GeneralModal.tsx";
 import { useContext, useRef } from "react";
 import AdminContext from "@/context/AdminContext.tsx";
-import { deleteFromDOSpaces } from "@/services/do.service.ts";
-import { deleteFile } from "@/services/files.service.ts";
+import { deleteFolderFromDOSpaces, deleteFromDOSpaces } from "@/services/do.service.ts";
+// import { deleteFile } from "@/services/files.service.ts";
 
 function DeleteModal() {
-  const { isOpenDelete, setIsOpenDelete, currentItem, setLoading, files, setFiles } =
-    useContext(AdminContext);
+  const {
+    isOpenDelete,
+    setIsOpenDelete,
+    currentItem,
+    currentFolder,
+    setLoading,
+    files,
+    setFiles,
+    folders,
+    setFolders,
+    isFolder,
+  } = useContext(AdminContext);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const deleteFolder = async () => {
+    setLoading(true);
+    const { data } = await deleteFolderFromDOSpaces(currentFolder.Prefix);
+    let newList = [...folders];
+    if (data) {
+      newList = folders.filter((folder) => folder.Prefix !== currentFolder.Prefix);
+    }
+    setFolders(newList);
+    setIsOpenDelete(false);
+    setLoading(false);
+  };
 
   const deleteCurrentFile = async () => {
     setLoading(true);
-    await deleteFromDOSpaces(currentItem.name);
-    await deleteFile(currentItem.id);
-    const newList = files.filter((file) => file.id !== currentItem.id);
+    const { data } = await deleteFromDOSpaces(currentItem.Key);
+    console.log("data", data);
+    let newList = [...files];
+    if (data) {
+      newList = files.filter((file) => file.Key !== currentItem.Key);
+    }
     setFiles(newList);
     setIsOpenDelete(false);
     setLoading(false);
+  };
+
+  const handleDelete = async () => {
+    if (isFolder) {
+      console.log("current folder", currentFolder);
+      await deleteFolder();
+    } else {
+      await deleteCurrentFile();
+    }
   };
 
   return (
@@ -38,7 +72,7 @@ function DeleteModal() {
           </button>
           <button
             className="rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-400 active:bg-red-300"
-            onClick={async () => await deleteCurrentFile()}
+            onClick={async () => await handleDelete()}
           >
             Aceptar
           </button>

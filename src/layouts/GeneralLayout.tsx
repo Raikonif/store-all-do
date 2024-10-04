@@ -5,6 +5,7 @@ import DeleteModal from "@/components/DeleteModal.tsx";
 import CircleProgress from "@/components/CircleProgress.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import { useContext } from "react";
+import ModalCreateFolder from "@/components/ModalCreateFolder.tsx";
 
 function GeneralLayout() {
   const { loading } = useContext(AdminContext);
@@ -19,6 +20,7 @@ function GeneralLayout() {
       {loading && <CircleProgress />}
       <UploadFilesModal />
       <DeleteModal />
+      <ModalCreateFolder />
     </div>
   );
 }

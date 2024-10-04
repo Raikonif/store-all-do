@@ -1,19 +1,33 @@
 import { createContext } from "react";
-import { FileDo } from "@/interfaces/FileDo.ts";
+import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 
 interface AdminContextData {
   isOpenUpload: boolean;
   setIsOpenUpload: (open: boolean) => void;
   isOpenDelete: boolean;
   setIsOpenDelete: (open: boolean) => void;
-  currentItem: FileDo;
-  setCurrentItem: (item: FileDo) => void;
+  isOpenFolder: boolean;
+  setIsOpenFolder: (open: boolean) => void;
+  currentItem: IFile;
+  setCurrentItem: (item: IFile) => void;
   loading: boolean;
   setLoading: (load: boolean) => void;
-  files: FileDo[];
-  setFiles: (files: FileDo[]) => void;
-  filteredFiles: FileDo[];
-  setFilteredFiles: (files: FileDo[]) => void;
+  files: IFile[];
+  setFiles: (files: IFile[]) => void;
+  filteredFiles: IFile[];
+  setFilteredFiles: (files: IFile[]) => void;
+  folders: IFolder[];
+  setFolders: (folders: IFolder[]) => void;
+  filteredFolders: IFolder[];
+  setFilteredFolders: (folders: IFolder[]) => void;
+  currentFolder: IFolder;
+  setCurrentFolder: (folder: IFolder) => void;
+  currentPath: string;
+  setCurrentPath: (path: string) => void;
+  folderName: string;
+  setFolderName: (name: string) => void;
+  isFolder: boolean;
+  setIsFolder: (folder: boolean) => void;
 }
 
 const AdminContext = createContext<AdminContextData>({} as AdminContextData);
