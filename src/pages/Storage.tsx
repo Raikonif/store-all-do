@@ -6,6 +6,7 @@ import Pagination from "@/components/Pagination.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import CircleProgress from "@/components/CircleProgress.tsx";
 import { IFile } from "@/interfaces/DOFileFolder.ts";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Storage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,6 +14,8 @@ function Storage() {
   const pageSize = 10;
   const [totalItems, setTotalItems] = useState(0);
   const {
+    setFilesPrev,
+    setFolderName,
     setIsOpenFolder,
     setIsOpenUpload,
     files,
@@ -29,12 +32,22 @@ function Storage() {
 
   const { filesQuery, forceRefetch } = useFiles({ dir: currentPath });
 
+  const queryClient = useQueryClient();
+
+  const invalidateQuery = () => {
+    queryClient.invalidateQueries({ queryKey: ["files"] });
+  };
+
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess && filesQuery.data) {
       setFiles(filesQuery.data.files);
       setFolders(filesQuery.data.folders);
-      console.log("folders and files", filesQuery.data);
     }
+  };
+
+  const handleButtonsCreation = () => {
+    setFolderName("");
+    setFilesPrev([]);
   };
 
   const handleSearch = useCallback(
@@ -63,8 +76,8 @@ function Storage() {
   );
 
   const handleBackButton = () => {
-    const parentPath = currentPath.split("/").slice(0, -2).join("/") + "/";
-    setCurrentPath(parentPath);
+    setCurrentPath(currentPath.split("/").slice(0, -2).join("/") + "/");
+    invalidateQuery();
     forceRefetch();
   };
 
@@ -80,14 +93,10 @@ function Storage() {
     }
   }, [files, folders, searchTerm]);
 
-  useEffect(() => {
-    console.log("current path", currentPath);
-  }, [currentPath]);
-
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
-      <h1 className="mb-3 text-2xl font-bold text-green-500">
-        Almacenamiento de Archivos Privado - Raikonif
+      <h1 className="mb-3 text-center text-xl font-bold text-green-500 md:text-3xl">
+        Almacenamiento de Archivos Privado
       </h1>
 
       <div className="relative mb-6">
@@ -102,6 +111,7 @@ function Storage() {
       </div>
       <div className="mb-4 flex justify-between gap-4 lg:flex-row lg:justify-end">
         <button
+          onMouseEnter={() => handleButtonsCreation()}
           onClick={() => setIsOpenUpload(true)}
           className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold text-white hover:bg-green-400 active:bg-green-300"
         >
@@ -109,6 +119,7 @@ function Storage() {
           <UploadCloud className="text-white" size={20} />
         </button>
         <button
+          onMouseEnter={() => handleButtonsCreation()}
           onClick={() => setIsOpenFolder(true)}
           className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300"
         >
@@ -130,6 +141,9 @@ function Storage() {
               >
                 <ArrowLeftCircle /> {"Ir atras"}
               </button>
+            </div>
+            <div>
+              <p className="font-semibold text-green-500">{"Ubicación: " + currentPath}</p>
             </div>
             <table className="w-full">
               <thead>

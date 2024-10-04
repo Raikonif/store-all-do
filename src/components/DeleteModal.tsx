@@ -2,6 +2,7 @@ import GeneralModal from "@/components/GeneralModal.tsx";
 import { useContext, useRef } from "react";
 import AdminContext from "@/context/AdminContext.tsx";
 import { deleteFolderFromDOSpaces, deleteFromDOSpaces } from "@/services/do.service.ts";
+import toast from "react-hot-toast";
 // import { deleteFile } from "@/services/files.service.ts";
 
 function DeleteModal() {
@@ -48,8 +49,10 @@ function DeleteModal() {
     if (isFolder) {
       console.log("current folder", currentFolder);
       await deleteFolder();
+      toast.success("Folder eliminado");
     } else {
       await deleteCurrentFile();
+      toast.success("Archivo eliminado");
     }
   };
 
@@ -58,11 +61,14 @@ function DeleteModal() {
       modalRef={modalRef}
       isOpen={isOpenDelete}
       onClose={setIsOpenDelete}
-      title={"Borrar Archivo"}
+      title={isFolder ? "Borrar Carpeta" : "Borrar Archivo"}
     >
       <div className="flex flex-col items-center justify-center gap-2 p-5">
-        <h1 className="font-bold">Borrar Archivo</h1>
-        <p>¿Estás seguro de borrar este archivo?</p>
+        <p>
+          {isFolder
+            ? "¿Estás seguro de borrar esta carpeta y todo su contenido?"
+            : "¿Estás seguro de borrar este archivo?"}
+        </p>
         <div className="mt-4 flex gap-4">
           <button
             className="rounded-md border-2 border-gray-500 px-4 py-2 font-semibold text-gray-500 hover:border-gray-400 hover:text-gray-400 active:border-gray-300 active:text-gray-300"

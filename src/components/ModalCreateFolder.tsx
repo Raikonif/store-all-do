@@ -34,7 +34,7 @@ function ModalCreateFolder() {
     <GeneralModal
       isOpen={isOpenFolder}
       onClose={setIsOpenFolder}
-      title={"Crear Folder"}
+      title={"Crear Carpeta"}
       modalRef={folderRef}
     >
       <div className="flex flex-col gap-6 p-6">

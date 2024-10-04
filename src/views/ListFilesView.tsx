@@ -5,6 +5,7 @@ import { downloadFromDOSpaces, listDOObjects } from "@/services/do.service.ts";
 import { DO_SPACES_URL } from "@/constants/general.constants.ts";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate.ts";
 import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
+import toast from "react-hot-toast";
 
 interface Props {
   filteredFiles: IFile[];
@@ -53,7 +54,9 @@ function ListFilesView({ filteredFiles }: Props) {
   };
 
   const downloadFile = async () => {
+    toast.success("Descargando archivo...");
     await downloadFromDOSpaces(currentItem.Key);
+    toast.success("Archivo descargado");
   };
 
   const openFile = (file: IFile) => {

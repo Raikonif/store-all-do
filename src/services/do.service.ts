@@ -56,7 +56,6 @@ const deleteFolderFromDOSpaces = async (folderName: string): Promise<AxiosRespon
 };
 
 const downloadFromDOSpaces = async (filePath: string): Promise<void> => {
-  // const encodedFolderName = decodeURIComponent(filePath);
   try {
     const response = await axios.get(`${BACKEND_URL}/api/files/download/${filePath}`, {
       responseType: "blob", // Important for file download

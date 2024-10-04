@@ -1,5 +1,5 @@
 import AdminContext from "@/context/AdminContext.tsx";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 
 interface Props {
@@ -11,10 +11,13 @@ function AdminProvider({ children }: Props) {
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [isOpenFolder, setIsOpenFolder] = useState(false);
+
   const [files, setFiles] = useState<IFile[]>([] as IFile[]);
+  const [filesPrev, setFilesPrev] = useState<File[]>([] as File[]);
+  const [filteredFiles, setFilteredFiles] = useState<IFile[]>(files);
+
   const [folders, setFolders] = useState<IFolder[]>([] as IFolder[]);
   const [filteredFolders, setFilteredFolders] = useState<IFolder[]>(folders);
-  const [filteredFiles, setFilteredFiles] = useState<IFile[]>(files);
   const [currentItem, setCurrentItem] = useState<IFile>({} as IFile);
   const [currentFolder, setCurrentFolder] = useState<IFolder>({} as IFolder);
   const [currentPath, setCurrentPath] = useState("nandy-files/");
@@ -36,6 +39,8 @@ function AdminProvider({ children }: Props) {
         setLoading,
         files,
         setFiles,
+        filesPrev,
+        setFilesPrev,
         filteredFiles,
         setFilteredFiles,
         folders,

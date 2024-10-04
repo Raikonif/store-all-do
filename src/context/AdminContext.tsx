@@ -14,6 +14,8 @@ interface AdminContextData {
   setLoading: (load: boolean) => void;
   files: IFile[];
   setFiles: (files: IFile[]) => void;
+  filesPrev: File[];
+  setFilesPrev: (files: File[]) => void;
   filteredFiles: IFile[];
   setFilteredFiles: (files: IFile[]) => void;
   folders: IFolder[];

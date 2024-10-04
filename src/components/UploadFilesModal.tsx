@@ -5,9 +5,17 @@ import uploadFilesDO from "@/helpers/uploadFilesDO.ts";
 
 function UploadFilesModal() {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { isOpenUpload, setIsOpenUpload, setLoading, files, setFiles, currentPath } =
-    useContext(AdminContext);
-  const [filesPrev, setFilesPrev] = useState<File[]>([] as File[]);
+  const {
+    isOpenUpload,
+    setIsOpenUpload,
+    setLoading,
+    files,
+    setFiles,
+    currentPath,
+    filesPrev,
+    setFilesPrev,
+  } = useContext(AdminContext);
+  // const [filesPrev, setFilesPrev] = useState<File[]>([] as File[]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,19 +42,19 @@ function UploadFilesModal() {
     setIsDragging(false);
 
     const droppedFiles = Array.from(e.dataTransfer.files);
-    setFilesPrev((prevFiles) => [...prevFiles, ...droppedFiles]);
+    setFilesPrev([...filesPrev, ...droppedFiles]);
   };
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       // setFileExample(e.target.files[0]);
       const selectedFiles = Array.from(e.target.files);
-      setFilesPrev((prevFiles) => [...prevFiles, ...selectedFiles]);
+      setFilesPrev([...filesPrev, ...selectedFiles]);
     }
   };
 
   const removeFile = (index: number) => {
-    setFilesPrev((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setFilesPrev(filesPrev.filter((_, i) => i !== index));
   };
 
   const uploadFiles = async () => {
