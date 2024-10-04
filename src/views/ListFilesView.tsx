@@ -1,6 +1,6 @@
 import { Download, Eye, FileIcon, FolderIcon, Trash } from "lucide-react";
 import AdminContext from "@/context/AdminContext.tsx";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { downloadFromDOSpaces, listDOObjects } from "@/services/do.service.ts";
 import { DO_SPACES_URL } from "@/constants/general.constants.ts";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate.ts";
@@ -12,25 +12,48 @@ interface Props {
 }
 
 function ListFilesView({ filteredFiles }: Props) {
-  const { setIsOpenDelete, setCurrentItem, filteredFolders, setFiles, setFolders, setCurrentPath } =
-    useContext(AdminContext);
-  const [tempItem, setTempItem] = useState<IFile>({} as IFile);
+  const {
+    setIsOpenDelete,
+    currentItem,
+    setCurrentItem,
+    filteredFolders,
+    setFiles,
+    setFolders,
+    setCurrentPath,
+    setCurrentFolder,
+    setIsFolder,
+    isFolder,
+  } = useContext(AdminContext);
 
   const navigateToFolder = async (folder: IFolder) => {
+    setIsFolder(true);
     setCurrentPath(folder.Prefix);
     const { data } = await listDOObjects(folder.Prefix);
     setFolders(data.folders);
     setFiles(data.files);
   };
 
-  const handleOpenDelete = (file: IFile, e) => {
-    e.stopPropagation();
+  const handleFolderOnMouseEnter = (folder: IFolder) => {
+    setCurrentFolder(folder);
+    setIsFolder(true);
+  };
+  const handleFileOnMouseEnter = (file: IFile) => {
     setCurrentItem(file);
+    setIsFolder(false);
+  };
+
+  const handleOpenDelete = (data: IFile | IFolder, e) => {
+    e.stopPropagation();
+    if (!isFolder) {
+      setCurrentItem(data as IFile);
+    } else {
+      setCurrentFolder(data as IFolder);
+    }
     setIsOpenDelete(true);
   };
 
   const downloadFile = async () => {
-    await downloadFromDOSpaces(tempItem.Key.split("/").pop());
+    await downloadFromDOSpaces(currentItem.Key);
   };
 
   const openFile = (file: IFile) => {
@@ -45,6 +68,7 @@ function ListFilesView({ filteredFiles }: Props) {
             key={index}
             className="border-b last:border-b-0 hover:bg-gray-100"
             onClick={() => navigateToFolder(folder)}
+            onMouseEnter={() => handleFolderOnMouseEnter(folder)}
           >
             <td className="flex items-center py-3 text-sm">
               <FolderIcon className="mr-2 text-yellow-500" size={15} />
@@ -52,7 +76,11 @@ function ListFilesView({ filteredFiles }: Props) {
             </td>
             <td className="py-3 text-xs text-gray-600">-</td>
             <td className="py-3 text-xs text-gray-600">-</td>
-            <td className="py-3 text-xs text-gray-600">-</td>
+            <td className="py-3 text-xs text-gray-600">
+              <button onClick={(e) => handleOpenDelete(folder, e)}>
+                <Trash className="text-red-500" />
+              </button>
+            </td>
           </tr>
         ))
       ) : (
@@ -67,7 +95,7 @@ function ListFilesView({ filteredFiles }: Props) {
           <tr
             key={index}
             className={`${file.Key.endsWith("/") && "cursor-pointer"} border-b last:border-b-0 hover:bg-gray-100`}
-            onMouseEnter={() => setTempItem(file)}
+            onMouseEnter={() => handleFileOnMouseEnter(file)}
           >
             <td className="flex items-center py-3 text-sm">
               {file.Key.endsWith("/") ? (

@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ArrowLeftCircle, DownloadCloud, SearchIcon, UploadCloud } from "lucide-react";
+import { ArrowLeftCircle, FolderPlus, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
 import Pagination from "@/components/Pagination.tsx";
@@ -13,6 +13,7 @@ function Storage() {
   const pageSize = 10;
   const [totalItems, setTotalItems] = useState(0);
   const {
+    setIsOpenFolder,
     setIsOpenUpload,
     files,
     setFiles,
@@ -107,9 +108,12 @@ function Storage() {
           {"Subir Archivos"}
           <UploadCloud className="text-white" size={20} />
         </button>
-        <button className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300">
-          {"Descargar todo"}
-          <DownloadCloud className="text-white" size={20} />
+        <button
+          onClick={() => setIsOpenFolder(true)}
+          className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300"
+        >
+          {"Crear Carpeta"}
+          <FolderPlus className="text-white" size={20} />
         </button>
       </div>
       <div className="overflow-x-auto">
@@ -119,10 +123,10 @@ function Storage() {
           <p className="mt-4 text-center text-gray-500">Error al traer los archivos </p>
         ) : (
           <div className="flex flex-col">
-            <div className={`${currentPath === "nandy-files/" && "hidden"}`}>
+            <div className={`${currentPath === "nandy-files/" && "invisible"}`}>
               <button
                 onClick={() => handleBackButton()}
-                className="flex gap-2 rounded-xl bg-green-500 p-2 text-center text-white"
+                className="flex gap-2 rounded-xl bg-green-500 p-3 text-center font-semibold text-white hover:bg-green-400 active:bg-green-300"
               >
                 <ArrowLeftCircle /> {"Ir atras"}
               </button>

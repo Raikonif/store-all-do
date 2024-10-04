@@ -2,11 +2,11 @@ import { ChangeEvent, DragEvent, useContext, useRef, useState } from "react";
 import GeneralModal from "@/components/GeneralModal.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import uploadFilesDO from "@/helpers/uploadFilesDO.ts";
-import { createFile } from "@/services/files.service.ts";
 
 function UploadFilesModal() {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { isOpenUpload, setIsOpenUpload, setLoading, files, setFiles } = useContext(AdminContext);
+  const { isOpenUpload, setIsOpenUpload, setLoading, files, setFiles, currentPath } =
+    useContext(AdminContext);
   const [filesPrev, setFilesPrev] = useState<File[]>([] as File[]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,29 +49,15 @@ function UploadFilesModal() {
     setFilesPrev((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
-  const creatingFile = async (fileUrl: string, file: File) => {
-    if (fileUrl) {
-      return await createFile({
-        name: file.name,
-        url: fileUrl,
-        type: file.type,
-        size: file.size,
-      });
-    } else {
-      console.error("Error creating file");
-      return null;
-    }
-  };
-
   const uploadFiles = async () => {
     setLoading(true);
     let newFiles = [...files];
     await Promise.all(
       filesPrev.map(async (file) => {
         try {
-          const fileUploaded = await uploadFilesDO(file);
-          const fileCreated = await creatingFile(fileUploaded.data.file_url, file);
-          newFiles = [...newFiles, fileCreated.data];
+          const fileUploaded = await uploadFilesDO(file, currentPath);
+          console.log("file uploaded", fileUploaded);
+          newFiles = [...newFiles, fileUploaded.data];
         } catch (error) {
           console.error("Error uploading file:", error);
         }

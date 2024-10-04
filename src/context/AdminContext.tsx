@@ -6,6 +6,8 @@ interface AdminContextData {
   setIsOpenUpload: (open: boolean) => void;
   isOpenDelete: boolean;
   setIsOpenDelete: (open: boolean) => void;
+  isOpenFolder: boolean;
+  setIsOpenFolder: (open: boolean) => void;
   currentItem: IFile;
   setCurrentItem: (item: IFile) => void;
   loading: boolean;
@@ -18,8 +20,14 @@ interface AdminContextData {
   setFolders: (folders: IFolder[]) => void;
   filteredFolders: IFolder[];
   setFilteredFolders: (folders: IFolder[]) => void;
+  currentFolder: IFolder;
+  setCurrentFolder: (folder: IFolder) => void;
   currentPath: string;
   setCurrentPath: (path: string) => void;
+  folderName: string;
+  setFolderName: (name: string) => void;
+  isFolder: boolean;
+  setIsFolder: (folder: boolean) => void;
 }
 
 const AdminContext = createContext<AdminContextData>({} as AdminContextData);
