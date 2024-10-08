@@ -119,10 +119,10 @@ function Storage() {
           Almacenamiento de Archivos Privado
         </h1>
         <button
-          className="rounded bg-green-500 p-3 text-white"
+          className="flex gap-4 rounded-xl bg-green-500 p-3 font-semibold text-white"
           onClick={async () => await logOut()}
         >
-          <LogOut />
+          Salir <LogOut />
         </button>
       </div>
 
