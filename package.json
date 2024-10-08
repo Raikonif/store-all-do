@@ -11,6 +11,7 @@
     "serve": "serve dist -s -n -L -p $PORT"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
     "@tanstack/react-query": "^5.56.2",
     "axios": "^1.7.7",
     "lucide-react": "^0.441.0",

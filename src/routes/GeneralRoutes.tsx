@@ -1,6 +1,8 @@
+import { lazy } from "react";
 import Login from "@/pages/Login";
 import GeneralLayout from "@/layouts/GeneralLayout";
-import Storage from "@/pages/Storage";
+const Storage = lazy(() => import("@/pages/Storage"));
+import ProtectedRoutes from "@/routes/ProtectedRoutes.tsx";
 
 const GeneralRoutes = {
   path: "",
@@ -12,7 +14,11 @@ const GeneralRoutes = {
     },
     {
       path: "storage",
-      element: <Storage />,
+      element: (
+        <ProtectedRoutes>
+          <Storage />
+        </ProtectedRoutes>
+      ),
     },
   ],
 };

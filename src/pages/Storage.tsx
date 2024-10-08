@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ArrowLeftCircle, FolderPlus, SearchIcon, UploadCloud } from "lucide-react";
+import { ArrowLeftCircle, FolderPlus, LogOut, SearchIcon, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
 import Pagination from "@/components/Pagination.tsx";
@@ -7,13 +7,19 @@ import AdminContext from "@/context/AdminContext.tsx";
 import CircleProgress from "@/components/CircleProgress.tsx";
 import { IFile } from "@/interfaces/DOFileFolder.ts";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/services/supabase.service.ts";
 
 function Storage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const [totalItems, setTotalItems] = useState(0);
+  const navigate = useNavigate();
+
   const {
+    setLoading,
+    setUser,
     setFilesPrev,
     setFolderName,
     setIsOpenFolder,
@@ -81,6 +87,19 @@ function Storage() {
     forceRefetch();
   };
 
+  const logOut = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error al cerrar sesión", error);
+      return;
+    }
+    setUser({});
+    localStorage.removeItem("authState");
+    navigate("/");
+    setLoading(false);
+  };
+
   useEffect(() => {
     fetchingFiles();
   }, [filesQuery.isSuccess, filesQuery.isLoading, filesQuery.data]);
@@ -95,9 +114,17 @@ function Storage() {
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
-      <h1 className="mb-3 text-center text-xl font-bold text-green-500 md:text-3xl">
-        Almacenamiento de Archivos Privado
-      </h1>
+      <div className="flex justify-between">
+        <h1 className="mb-3 text-center text-xl font-bold text-green-500 md:text-3xl">
+          Almacenamiento de Archivos Privado
+        </h1>
+        <button
+          className="rounded bg-green-500 p-3 text-white"
+          onClick={async () => await logOut()}
+        >
+          <LogOut />
+        </button>
+      </div>
 
       <div className="relative mb-6">
         <input

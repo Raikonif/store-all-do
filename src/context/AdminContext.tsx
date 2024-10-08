@@ -2,6 +2,8 @@ import { createContext } from "react";
 import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 
 interface AdminContextData {
+  user: object | null;
+  setUser: (user: object) => void;
   isOpenUpload: boolean;
   setIsOpenUpload: (open: boolean) => void;
   isOpenDelete: boolean;

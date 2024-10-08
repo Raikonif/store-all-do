@@ -7,6 +7,7 @@ interface Props {
 }
 
 function AdminProvider({ children }: Props) {
+  const [user, setUser] = useState<object | null>({});
   const [loading, setLoading] = useState(false);
   const [isOpenUpload, setIsOpenUpload] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
@@ -27,6 +28,8 @@ function AdminProvider({ children }: Props) {
   return (
     <AdminContext.Provider
       value={{
+        user,
+        setUser,
         isOpenUpload,
         setIsOpenUpload,
         isOpenDelete,

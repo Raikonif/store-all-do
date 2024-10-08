@@ -1,31 +1,61 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ArrowBigDownDash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { STORAGE } from "@/constants/general.constants.ts";
+import { supabaseAuth, supabaseVerifyCodeOTP } from "@/services/supabase.service.ts";
+import toast from "react-hot-toast";
+import AdminContext from "@/context/AdminContext.tsx";
 
 function Login() {
   const [email, setEmail] = useState("");
-  const [openToken, setOpenToken] = useState(false);
   const [token, setToken] = useState("");
+  const [openToken, setOpenToken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingToken, setIsLoadingToken] = useState(false);
+
+  const { setUser } = useContext(AdminContext);
 
   const navigate = useNavigate();
 
   const sendTokenToEmail = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    const { data, error } = await supabaseAuth(email);
+    if (data) {
       setOpenToken(true);
-    }, 2000);
+      toast.success("Magic Link enviado a tu correo");
+    }
+    if (error) {
+      console.log("error", error);
+      toast.error("Error al enviar el Magic Link");
+    }
   };
 
   const logIn = async () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    console.log("email and token", email, token);
+    const { data, error } = await supabaseVerifyCodeOTP(email, token);
+    if (data) {
+      localStorage.setItem("authState", JSON.stringify({ auth: true, session: data }));
+      setUser(data.session);
+      setIsLoadingToken(false);
       navigate(STORAGE);
-    }, 2000);
+    }
+    if (error) {
+      console.log("error", error);
+      toast.error("Error al iniciar sesión");
+    }
   };
+
+  const checkCookies = () => {
+    const authSessionCookie = document.cookie.match("auth-session=([^;]+)");
+    return !!authSessionCookie;
+  };
+
+  useEffect(() => {
+    const isAuthenticated = checkCookies();
+    if (isAuthenticated) {
+      navigate(STORAGE);
+    }
+  }, [navigate]);
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
@@ -57,7 +87,7 @@ function Login() {
             <div className="py-4">
               <button
                 type="button"
-                onClick={() => sendTokenToEmail()}
+                onClick={async () => await sendTokenToEmail()}
                 disabled={isLoading}
                 className="group relative flex w-full justify-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-green-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -112,10 +142,10 @@ function Login() {
             <button
               type="button"
               onClick={() => logIn()}
-              disabled={isLoading}
+              disabled={isLoadingToken}
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoading ? (
+              {isLoadingToken ? (
                 <svg
                   className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
                   xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +167,7 @@ function Login() {
                   ></path>
                 </svg>
               ) : null}
-              {isLoading ? "Iniciando Sesión..." : "Iniciar Sesión"}
+              {isLoadingToken ? "Iniciando Sesión..." : "Iniciar Sesión"}
             </button>
           </div>
         </form>
