@@ -11,7 +11,6 @@ interface Props {
 function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) {
   const totalPages = Math.ceil(totalItems / pageSize);
   const pageNumbers = [];
-
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
@@ -19,6 +18,12 @@ function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
+    }
+    if (page > totalPages) {
+      onPageChange(1);
+    }
+    if (page < 1) {
+      onPageChange(totalPages);
     }
   };
 
@@ -45,10 +50,20 @@ function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) 
   };
 
   return (
-    <div className="flex w-full items-center justify-center gap-6 pt-4">
-      <ArrowLeftCircle className="text-green-500" size={30} />
+    <div className="z-20 flex w-full items-center justify-center gap-6 pt-4">
+      <button>
+        <ArrowLeftCircle
+          className="cursor-pointer text-green-500"
+          size={30}
+          onClick={() => handlePageChange(currentPage - 1)}
+        />
+      </button>
       {renderPageNumbers()}
-      <ArrowRightCircle className="text-green-500" size={30} />
+      <ArrowRightCircle
+        className="cursor-pointer text-green-500"
+        size={30}
+        onClick={() => handlePageChange(currentPage + 1)}
+      />
     </div>
   );
 }
