@@ -32,8 +32,10 @@ function Storage() {
     setFilteredFolders,
     folders,
     setFolders,
+    setFoldersFiles,
     currentPath,
     setCurrentPath,
+    foldersFiles,
   } = useContext(AdminContext);
 
   const { filesQuery, forceRefetch } = useFiles({ dir: currentPath });
@@ -46,8 +48,11 @@ function Storage() {
 
   const fetchingFiles = async () => {
     if (filesQuery.isSuccess && filesQuery.data) {
-      setFiles(filesQuery.data.files);
+      const fetchedFolders = filesQuery.data.folders;
+      const fetchedFiles = filesQuery.data.files;
       setFolders(filesQuery.data.folders);
+      setFiles(filesQuery.data.files);
+      setFoldersFiles([...fetchedFiles, ...fetchedFolders]);
     }
   };
 
@@ -61,9 +66,6 @@ function Storage() {
       setSearchTerm(searchTermString);
       if (files.length === 0) return;
       if (searchTermString !== "" && (files.length > 0 || folders.length > 0)) {
-        const filtered: IFile[] = files.filter((file) =>
-          file.Key.split("/").pop().toLowerCase().includes(searchTermString.toLowerCase()),
-        );
         const filteredFolders = folders.filter((folder) =>
           folder.Prefix.slice(0, -1)
             .split("/")
@@ -71,11 +73,18 @@ function Storage() {
             .toLowerCase()
             .includes(searchTermString.toLowerCase()),
         );
-        setFilteredFiles(filtered);
+        const filtered: IFile[] = files.filter((file) =>
+          file.Key.split("/").pop().toLowerCase().includes(searchTermString.toLowerCase()),
+        );
         setFilteredFolders(filteredFolders);
+        setFilteredFiles(filtered);
+        setFoldersFiles([...filteredFolders, ...filtered]);
+        setTotalItems(foldersFiles.length);
       } else {
-        setFilteredFiles(files);
         setFilteredFolders(folders);
+        setFilteredFiles(files);
+        setFoldersFiles([...folders, ...files]);
+        setTotalItems(foldersFiles.length);
       }
     },
     [files, filteredFiles, folders, filteredFolders],
@@ -100,26 +109,32 @@ function Storage() {
     setLoading(false);
   };
 
+  const currentData = foldersFiles.slice(
+    (currentPage - 1) * pageSize,
+    (currentPage - 1) * pageSize + pageSize,
+  );
+
   useEffect(() => {
     fetchingFiles();
   }, [filesQuery.isSuccess, filesQuery.isLoading, filesQuery.data]);
 
   useEffect(() => {
-    setTotalItems(files.length);
+    setTotalItems(foldersFiles.length);
     if (searchTerm === "") {
-      setFilteredFiles(files);
       setFilteredFolders(folders);
+      setFilteredFiles(files);
+      setFoldersFiles([...files, ...folders]);
     }
   }, [files, folders, searchTerm]);
 
   return (
     <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <h1 className="mb-3 text-center text-xl font-bold text-green-500 md:text-3xl">
           Almacenamiento de Archivos Privado
         </h1>
         <button
-          className="flex gap-4 rounded-xl bg-green-500 p-3 font-semibold text-white"
+          className="flex items-center gap-4 rounded-xl bg-green-500 p-2 font-semibold text-white"
           onClick={async () => await logOut()}
         >
           Salir <LogOut />
@@ -136,7 +151,7 @@ function Storage() {
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
-      <div className="mb-4 flex justify-between gap-4 lg:flex-row lg:justify-end">
+      <div className="flex justify-between gap-4 lg:flex-row lg:justify-end">
         <button
           onMouseEnter={() => handleButtonsCreation()}
           onClick={() => setIsOpenUpload(true)}
@@ -182,10 +197,7 @@ function Storage() {
                 </tr>
               </thead>
               <tbody>
-                <ListFilesView
-                  filteredFiles={filteredFiles || []}
-                  filteredFolders={filteredFolders || []}
-                />
+                <ListFilesView data={currentData} />
               </tbody>
               <tfoot>
                 <tr>

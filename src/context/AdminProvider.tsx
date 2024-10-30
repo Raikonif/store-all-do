@@ -25,6 +25,8 @@ function AdminProvider({ children }: Props) {
   const [folderName, setFolderName] = useState("");
   const [isFolder, setIsFolder] = useState(false);
 
+  const [foldersFiles, setFoldersFiles] = useState<(IFile | IFolder)[]>([]);
+
   return (
     <AdminContext.Provider
       value={{
@@ -50,6 +52,8 @@ function AdminProvider({ children }: Props) {
         setFolders,
         filteredFolders,
         setFilteredFolders,
+        foldersFiles,
+        setFoldersFiles,
         currentFolder,
         setCurrentFolder,
         currentPath,

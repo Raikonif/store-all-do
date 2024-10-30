@@ -32,6 +32,8 @@ interface AdminContextData {
   setFolderName: (name: string) => void;
   isFolder: boolean;
   setIsFolder: (folder: boolean) => void;
+  foldersFiles: (IFile | IFolder)[];
+  setFoldersFiles: (files: (IFile | IFolder)[]) => void;
 }
 
 const AdminContext = createContext<AdminContextData>({} as AdminContextData);
