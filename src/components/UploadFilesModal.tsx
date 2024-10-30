@@ -47,7 +47,6 @@ function UploadFilesModal() {
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      // setFileExample(e.target.files[0]);
       const selectedFiles = Array.from(e.target.files);
       setFilesPrev([...filesPrev, ...selectedFiles]);
     }
