@@ -128,13 +128,13 @@ function Storage() {
   }, [files, folders, searchTerm]);
 
   return (
-    <div className="mx-auto w-full rounded-lg bg-white p-6 shadow-lg">
+    <div className="mx-auto w-full rounded-lg bg-gray-900 p-6 shadow-lg">
       <div className="mb-2 flex justify-between">
         <h1 className="mb-3 text-center text-xl font-bold text-green-500 md:text-3xl">
           Almacenamiento de Archivos Privado
         </h1>
         <button
-          className="flex items-center gap-4 rounded-xl bg-green-500 p-2 font-semibold text-white"
+          className="flex items-center gap-4 rounded-xl bg-green-500 p-2 font-semibold hover:bg-green-400 active:bg-green-300"
           onClick={async () => await logOut()}
         >
           Salir <LogOut />
@@ -147,7 +147,7 @@ function Storage() {
           placeholder="Buscar archivos..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full rounded-lg bg-gray-100 px-4 py-2 pl-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full rounded-lg bg-gray-800 px-4 py-2 pl-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
@@ -155,18 +155,18 @@ function Storage() {
         <button
           onMouseEnter={() => handleButtonsCreation()}
           onClick={() => setIsOpenUpload(true)}
-          className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold text-white hover:bg-green-400 active:bg-green-300"
+          className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold hover:bg-green-400 active:bg-green-300"
         >
           {"Subir Archivos"}
-          <UploadCloud className="text-white" size={20} />
+          <UploadCloud size={20} />
         </button>
         <button
           onMouseEnter={() => handleButtonsCreation()}
           onClick={() => setIsOpenFolder(true)}
-          className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold text-white hover:bg-cyan-400 active:bg-cyan-300"
+          className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold hover:bg-cyan-400 active:bg-cyan-300"
         >
           {"Crear Carpeta"}
-          <FolderPlus className="text-white" size={20} />
+          <FolderPlus size={20} />
         </button>
       </div>
       <div className="overflow-x-auto">
@@ -189,7 +189,7 @@ function Storage() {
             </div>
             <table className="w-full">
               <thead>
-                <tr className="border-b-2 border-green-500 text-left text-gray-600">
+                <tr className="border-b-2 border-green-500 text-left text-gray-400">
                   <th className="pb-2 text-sm font-semibold">Nombre</th>
                   <th className="pb-2 text-sm font-semibold">Tamaño</th>
                   <th className="pb-2 text-sm font-semibold">Modificado</th>

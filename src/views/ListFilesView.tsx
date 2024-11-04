@@ -68,17 +68,17 @@ function ListFilesView({ data }: Props) {
           "Prefix" in item ? (
             <tr
               key={index}
-              className="border-b last:border-b-0 hover:bg-gray-100"
+              className="border-b last:border-b-0 hover:bg-gray-800"
               onClick={() => navigateToFolder(item)}
               onMouseEnter={() => handleFolderOnMouseEnter(item)}
             >
               <td className="flex items-center py-1 text-sm">
                 <FolderIcon className="mr-2 text-yellow-500" size={15} />
-                {item.Prefix.slice(0, -1).split("/").pop()}
+                <span className="text-gray-400">{item.Prefix.slice(0, -1).split("/").pop()}</span>
               </td>
-              <td className="py-1 text-xs text-gray-600">-</td>
-              <td className="py-1 text-xs text-gray-600">-</td>
-              <td className="py-1 text-xs text-gray-600">
+              <td className="py-1 text-xs text-gray-400">-</td>
+              <td className="py-1 text-xs text-gray-400">-</td>
+              <td className="py-1 text-xs text-gray-400">
                 <button onClick={(e) => handleOpenDelete(item, e)}>
                   <Trash className="text-red-500" />
                 </button>
@@ -87,7 +87,7 @@ function ListFilesView({ data }: Props) {
           ) : (
             <tr
               key={index}
-              className={`${item.Key.endsWith("/") && "cursor-pointer"} border-b last:border-b-0 hover:bg-gray-100`}
+              className={`${item.Key.endsWith("/") && "cursor-pointer"} border-b last:border-b-0 hover:bg-gray-800`}
               onMouseEnter={() => handleFileOnMouseEnter(item)}
             >
               <td className="flex items-center py-3 text-sm">
@@ -96,14 +96,16 @@ function ListFilesView({ data }: Props) {
                 ) : (
                   <FileIcon className="mr-2 text-blue-500" size={15} />
                 )}
-                {item.Key.endsWith("/")
-                  ? item.Key.slice(0, -1).split("/").pop()
-                  : item.Key.split("/").pop()}
+                <span className="text-gray-400">
+                  {item.Key.endsWith("/")
+                    ? item.Key.slice(0, -1).split("/").pop()
+                    : item.Key.split("/").pop()}
+                </span>
               </td>
-              <td className="py-1 text-xs text-gray-600">
+              <td className="py-1 text-xs text-gray-400">
                 {item.Size > 0 && (item.Size / (1024 * 1024)).toFixed(2) + "MB"}
               </td>
-              <td className="py-1 text-xs text-gray-600">
+              <td className="py-1 text-xs text-gray-400">
                 {convertToNaturalDate(item.LastModified)}
               </td>
               <td className="py-1 text-xs text-gray-600">
@@ -134,7 +136,7 @@ function ListFilesView({ data }: Props) {
         )
       ) : (
         <tr>
-          <td colSpan={4} className="text-center text-gray-600">
+          <td colSpan={4} className="text-center text-gray-400">
             No se encontraron archivos ni carpetas
           </td>
         </tr>

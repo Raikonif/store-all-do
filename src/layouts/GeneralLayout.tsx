@@ -10,7 +10,7 @@ import ModalCreateFolder from "@/components/ModalCreateFolder.tsx";
 function GeneralLayout() {
   const { loading } = useContext(AdminContext);
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-gray-900">
       <Outlet />
       <Toaster
         toastOptions={{

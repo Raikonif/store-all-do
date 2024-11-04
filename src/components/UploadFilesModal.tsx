@@ -87,14 +87,14 @@ function UploadFilesModal() {
           <div className="mx-auto max-w-md p-6">
             <div
               className={`rounded-lg border-2 border-dashed p-8 text-center ${
-                isDragging ? "border-green-500 bg-blue-50" : "border-gray-300"
+                isDragging ? "border-green-500 bg-blue-50" : "border-gray-400"
               }`}
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
             >
-              <p className="mb-4 text-sm text-gray-600">
+              <p className="mb-4 text-sm text-gray-500">
                 Arrastra y suelta tus archivos aqui, o haz click en el boton para seleccionarlos.
               </p>
               <input
@@ -106,21 +106,21 @@ function UploadFilesModal() {
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded bg-green-500 px-4 py-2 text-sm font-bold text-white hover:bg-green-600"
+                className="rounded bg-green-500 px-4 py-2 text-sm font-bold hover:bg-green-600"
               >
                 Seleccionar Archivos
               </button>
             </div>
             {filesPrev.length > 0 && (
               <div className="mt-6">
-                <h3 className="mb-2 font-semibold">Archivos Seleccionados:</h3>
+                <h3 className="mb-2 font-semibold text-gray-400">Archivos Seleccionados:</h3>
                 <ul className="">
                   {filesPrev.map((file, index) => (
                     <li
                       key={index}
-                      className={`${index % 2 === 0 ? "bg-slate-50" : "bg-green-100"} flex items-center justify-between rounded bg-gray-100 p-2`}
+                      className={`${index % 2 === 0 ? "bg-gray-700" : "bg-gray-600"} flex items-center justify-between p-2`}
                     >
-                      <span className="truncate text-xs">{file.name}</span>
+                      <span className="truncate text-xs text-gray-200">{file.name}</span>
                       <button
                         onClick={() => removeFile(index)}
                         className="text-xs text-green-500 hover:text-green-700"
@@ -137,13 +137,13 @@ function UploadFilesModal() {
         <div className="flex w-full justify-end gap-2">
           <button
             onClick={() => setIsOpenUpload(false)}
-            className="rounded border border-green-500 bg-transparent p-2 text-sm font-semibold text-green-500"
+            className="rounded border border-green-500 bg-transparent p-2 text-sm font-semibold text-green-500 hover:border-green-400 hover:text-green-400 active:border-green-300 active:text-green-300"
           >
             Cancelar
           </button>
           <button
             onClick={() => uploadFiles()}
-            className="rounded bg-green-500 p-2 text-sm font-semibold text-white"
+            className="rounded bg-green-500 p-2 text-sm font-semibold hover:bg-green-400 active:bg-green-300"
           >
             Subir Archivos
           </button>
