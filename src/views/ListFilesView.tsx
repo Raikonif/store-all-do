@@ -68,7 +68,7 @@ function ListFilesView({ data }: Props) {
           "Prefix" in item ? (
             <tr
               key={index}
-              className="border-b last:border-b-0 hover:bg-gray-800"
+              className="border-b border-gray-700 last:border-b-0 hover:bg-gray-800"
               onClick={() => navigateToFolder(item)}
               onMouseEnter={() => handleFolderOnMouseEnter(item)}
             >
@@ -87,7 +87,7 @@ function ListFilesView({ data }: Props) {
           ) : (
             <tr
               key={index}
-              className={`${item.Key.endsWith("/") && "cursor-pointer"} border-b last:border-b-0 hover:bg-gray-800`}
+              className={`${item.Key.endsWith("/") && "cursor-pointer"} border-b border-gray-700 last:border-b-0 hover:bg-gray-800`}
               onMouseEnter={() => handleFileOnMouseEnter(item)}
             >
               <td className="flex items-center py-3 text-sm">
