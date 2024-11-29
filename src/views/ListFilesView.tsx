@@ -6,6 +6,7 @@ import { DO_SPACES_URL } from "@/constants/general.constants.ts";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate.ts";
 import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 import toast from "react-hot-toast";
+import downloadFile from "@/helpers/downloadFile.ts";
 
 interface Props {
   data: (IFile | IFolder)[];
@@ -51,9 +52,9 @@ function ListFilesView({ data }: Props) {
     setIsOpenDelete(true);
   };
 
-  const downloadFile = async () => {
+  const handleDownloadFile = async () => {
     toast.success("Descargando archivo...");
-    await downloadFile();
+    downloadFile();
     await downloadFromDOSpaces(currentItem.Key);
     toast.success("Archivo descargado");
   };
@@ -115,7 +116,7 @@ function ListFilesView({ data }: Props) {
                     <button onClick={() => openFile(item)}>
                       <Eye size={25} className="text-cyan-500" />
                     </button>
-                    <button onClick={() => downloadFile()}>
+                    <button onClick={() => handleDownloadFile()}>
                       {/*<a href={tempItem.url} download>*/}
                       <Download
                         size={25}
