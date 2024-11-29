@@ -61,14 +61,16 @@ function Login() {
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-900 px-4 sm:px-6 md:py-12 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-white md:mt-6">Iniciar Sesión</h2>
+          <h2 className="text-center text-3xl font-extrabold text-gray-300 md:mt-6">
+            Iniciar Sesión
+          </h2>
           <p className="mt-2 text-center text-sm text-gray-400">
             Pon tu email e ingresa el codigo enviado a tu correo
           </p>
         </div>
         <form className="mt-8 space-y-6">
           <div className="-space-y-px rounded-md shadow-sm">
-            <div>
+            <div className="bg-gray-700">
               <label htmlFor="email" className="sr-only">
                 Correo Electronico
               </label>
@@ -78,7 +80,7 @@ function Login() {
                 type="email"
                 autoComplete="email"
                 required
-                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-800 px-3 py-2 text-gray-600 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Correo Electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -131,7 +133,7 @@ function Login() {
                 type="text"
                 autoComplete="one-time-code"
                 required
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-700 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Código Token"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}

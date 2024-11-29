@@ -53,6 +53,7 @@ function ListFilesView({ data }: Props) {
 
   const downloadFile = async () => {
     toast.success("Descargando archivo...");
+    await downloadFile();
     await downloadFromDOSpaces(currentItem.Key);
     toast.success("Archivo descargado");
   };
