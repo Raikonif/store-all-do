@@ -14,7 +14,6 @@ interface Props {
 function ListFilesView({ data }: Props) {
   const {
     setIsOpenDelete,
-    currentItem,
     setCurrentItem,
     setFiles,
     setFolders,
@@ -32,15 +31,6 @@ function ListFilesView({ data }: Props) {
     setFiles(data.files);
   };
 
-  const handleFolderOnMouseEnter = (folder: IFolder) => {
-    setCurrentFolder(folder);
-    setIsFolder(true);
-  };
-  const handleFileOnMouseEnter = (file: IFile) => {
-    setCurrentItem(file);
-    setIsFolder(false);
-  };
-
   const handleOpenDelete = (data: IFile | IFolder, e) => {
     e.stopPropagation();
     if (!isFolder) {
@@ -51,9 +41,10 @@ function ListFilesView({ data }: Props) {
     setIsOpenDelete(true);
   };
 
-  const downloadFile = async () => {
+  const handleDownloadFile = async (url: string) => {
     toast.success("Descargando archivo...");
-    await downloadFromDOSpaces(currentItem.Key);
+    // downloadFile();
+    await downloadFromDOSpaces(url);
     toast.success("Archivo descargado");
   };
 
@@ -70,7 +61,6 @@ function ListFilesView({ data }: Props) {
               key={index}
               className="border-b border-gray-700 last:border-b-0 hover:bg-gray-800"
               onClick={() => navigateToFolder(item)}
-              onMouseEnter={() => handleFolderOnMouseEnter(item)}
             >
               <td className="flex items-center py-1 text-sm">
                 <FolderIcon className="mr-2 text-yellow-500" size={15} />
@@ -88,7 +78,6 @@ function ListFilesView({ data }: Props) {
             <tr
               key={index}
               className={`${item.Key.endsWith("/") && "cursor-pointer"} border-b border-gray-700 last:border-b-0 hover:bg-gray-800`}
-              onMouseEnter={() => handleFileOnMouseEnter(item)}
             >
               <td className="flex items-center py-3 text-sm">
                 {item.Key.endsWith("/") ? (
@@ -114,7 +103,7 @@ function ListFilesView({ data }: Props) {
                     <button onClick={() => openFile(item)}>
                       <Eye size={25} className="text-cyan-500" />
                     </button>
-                    <button onClick={() => downloadFile()}>
+                    <button onClick={() => handleDownloadFile(item.Key)}>
                       {/*<a href={tempItem.url} download>*/}
                       <Download
                         size={25}

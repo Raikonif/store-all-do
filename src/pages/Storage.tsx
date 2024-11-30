@@ -147,7 +147,7 @@ function Storage() {
           placeholder="Buscar archivos..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full rounded-lg bg-gray-800 px-4 py-2 pl-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full rounded-lg bg-gray-800 px-4 py-2 pl-10 text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
@@ -184,34 +184,37 @@ function Storage() {
                 <ArrowLeftCircle /> {"Ir atras"}
               </button>
             </div>
-            <div>
-              <p className="font-semibold text-green-500">{"Ubicación: " + currentPath}</p>
+
+            <div className="flex w-full flex-col items-center justify-center">
+              <div className="flex w-full">
+                <p className="font-semibold text-green-500">{"Ubicación: " + currentPath}</p>
+              </div>
+              <table className="m-4 w-full max-w-6xl">
+                <thead>
+                  <tr className="border-b-2 border-green-500 text-left text-gray-400">
+                    <th className="pb-2 text-sm font-semibold">Nombre</th>
+                    <th className="pb-2 text-sm font-semibold">Tamaño</th>
+                    <th className="pb-2 text-sm font-semibold">Modificado</th>
+                    <th className="pb-2 text-sm font-semibold">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ListFilesView data={currentData} />
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan={4}>
+                      <Pagination
+                        currentPage={currentPage}
+                        totalItems={totalItems}
+                        pageSize={pageSize}
+                        onPageChange={setCurrentPage}
+                      />
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-green-500 text-left text-gray-400">
-                  <th className="pb-2 text-sm font-semibold">Nombre</th>
-                  <th className="pb-2 text-sm font-semibold">Tamaño</th>
-                  <th className="pb-2 text-sm font-semibold">Modificado</th>
-                  <th className="pb-2 text-sm font-semibold">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ListFilesView data={currentData} />
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan={4}>
-                    <Pagination
-                      currentPage={currentPage}
-                      totalItems={totalItems}
-                      pageSize={pageSize}
-                      onPageChange={setCurrentPage}
-                    />
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
           </div>
         )}
       </div>
