@@ -28,5 +28,9 @@ RUN if [ -f yarn.lock ]; then \
 # Step 7: Expose the port the app will run on
 EXPOSE 3000
 
-# Step 8: Start the app
-CMD ["npm", "start"]
+# Step 8: Start the app using yarn if it's available, otherwise npm
+CMD if [ -f yarn.lock ]; then \
+    yarn start; \
+    else \
+    npm start; \
+    fi
