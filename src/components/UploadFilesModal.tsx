@@ -42,7 +42,35 @@ function UploadFilesModal() {
     setIsDragging(false);
 
     const droppedFiles = Array.from(e.dataTransfer.files);
+    // for (let i = 0; i < items.length; i++) {
+    //   const item = items[i];
+    //   if (item.kind === "file") {
+    //     const file = item.getAsFile();
+    //     newFiles.push(file);
+    //   } else if (item.kind === "string" && item.type === "text/uri-list") {
+    //     // Si es una carpeta, accede a los archivos dentro de ella
+    //     const folder = item.webkitGetAsEntry();
+    //     if (folder && folder.isDirectory) {
+    //       handleFolder(folder, newFiles);
+    //     }
+    //   }
+    // }
     setFilesPrev([...filesPrev, ...droppedFiles]);
+  };
+
+  const handleFolder = (folder: any, newFiles: File[]) => {
+    const reader = folder.createReader();
+    reader.readEntries((entries: any[]) => {
+      entries.forEach((entry) => {
+        if (entry.isDirectory) {
+          handleFolder(entry, newFiles); // Recursividad en carpetas
+        } else {
+          entry.file((file: File) => {
+            newFiles.push(file);
+          });
+        }
+      });
+    });
   };
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
