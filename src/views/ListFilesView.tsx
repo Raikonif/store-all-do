@@ -1,17 +1,21 @@
-import { Download, Eye, FileIcon, FolderIcon, Trash } from "lucide-react";
+import { Download, Eye, FolderIcon, Trash } from "lucide-react";
 import AdminContext from "@/context/AdminContext.tsx";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { downloadFromDOSpaces, listDOObjects } from "@/services/do.service.ts";
 import { DO_SPACES_URL } from "@/constants/general.constants.ts";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate.ts";
 import { IFile, IFolder } from "@/interfaces/DOFileFolder.ts";
 import toast from "react-hot-toast";
+import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import { FaFileArchive, FaFolder } from "react-icons/fa";
 
 interface Props {
   data: (IFile | IFolder)[];
 }
 
 function ListFilesView({ data }: Props) {
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+
   const {
     setIsOpenDelete,
     setCurrentItem,
@@ -63,8 +67,22 @@ function ListFilesView({ data }: Props) {
               onClick={() => navigateToFolder(item)}
             >
               <td className="flex items-center py-1 text-sm">
-                <FolderIcon className="mr-2 text-yellow-500" size={15} />
-                <span className="text-gray-400">{item.Prefix.slice(0, -1).split("/").pop()}</span>
+                <div className="flex items-center justify-center">
+                  {isCheckboxChecked ? (
+                    <MdCheckBox
+                      className="mx-2 text-gray-400"
+                      onClick={() => setIsCheckboxChecked(false)}
+                    />
+                  ) : (
+                    <MdOutlineCheckBoxOutlineBlank
+                      className="mx-2 text-gray-400"
+                      onClick={() => setIsCheckboxChecked(true)}
+                    />
+                  )}
+
+                  <FaFolder className="mr-2 text-yellow-500" size={15} />
+                  <span className="text-gray-400">{item.Prefix.slice(0, -1).split("/").pop()}</span>
+                </div>
               </td>
               <td className="py-1 text-xs text-gray-400">-</td>
               <td className="py-1 text-xs text-gray-400">-</td>
@@ -83,7 +101,20 @@ function ListFilesView({ data }: Props) {
                 {item.Key.endsWith("/") ? (
                   <FolderIcon className="mr-2 text-yellow-500" size={15} />
                 ) : (
-                  <FileIcon className="mr-2 text-blue-500" size={15} />
+                  <>
+                    {isCheckboxChecked ? (
+                      <MdCheckBox
+                        className="mx-2 text-gray-400"
+                        onClick={() => setIsCheckboxChecked(false)}
+                      />
+                    ) : (
+                      <MdOutlineCheckBoxOutlineBlank
+                        className="mx-2 text-gray-400"
+                        onClick={() => setIsCheckboxChecked(true)}
+                      />
+                    )}
+                    <FaFileArchive className="mr-2 text-blue-600" size={15} />
+                  </>
                 )}
                 <span className="text-gray-400">
                   {item.Key.endsWith("/")
