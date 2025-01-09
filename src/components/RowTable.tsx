@@ -4,7 +4,7 @@ import convertToNaturalDate from "@/helpers/convertToNaturalDate";
 import { IFile, IFolder } from "@/interfaces/DOFileFolder";
 import { downloadFromDOSpaces, listDOObjects } from "@/services/do.service";
 import { Download, Eye, FolderIcon, Trash } from "lucide-react";
-import { useContext, useState } from "react";
+import { MouseEvent, useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { FaFileArchive, FaFolder } from "react-icons/fa";
 import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
@@ -16,6 +16,7 @@ interface Props {
 
 function RowTable({ item, index }: Props) {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+
   const {
     setIsFolder,
     isFolder,
@@ -45,6 +46,10 @@ function RowTable({ item, index }: Props) {
     setIsOpenDelete(true);
   };
 
+  const handleChildClick = (e: MouseEvent, selected: boolean) => {
+    e.stopPropagation();
+    setIsCheckboxChecked(selected);
+  };
   const handleDownloadFile = async (url: string) => {
     toast.success("Descargando archivo...");
     // downloadFile();
@@ -69,13 +74,15 @@ function RowTable({ item, index }: Props) {
             <div className="flex items-center justify-center">
               {isCheckboxChecked ? (
                 <MdCheckBox
+                  size={25}
                   className="mx-2 text-gray-400"
-                  onClick={() => setIsCheckboxChecked(false)}
+                  onClick={(e) => handleChildClick(e, false)}
                 />
               ) : (
                 <MdOutlineCheckBoxOutlineBlank
+                  size={25}
                   className="mx-2 text-gray-400"
-                  onClick={() => setIsCheckboxChecked(true)}
+                  onClick={(e) => handleChildClick(e, true)}
                 />
               )}
               <FaFolder className="mr-2 text-yellow-500" size={15} />
@@ -106,11 +113,13 @@ function RowTable({ item, index }: Props) {
               <>
                 {isCheckboxChecked ? (
                   <MdCheckBox
+                    size={25}
                     className="mx-2 text-gray-400"
                     onClick={() => setIsCheckboxChecked(false)}
                   />
                 ) : (
                   <MdOutlineCheckBoxOutlineBlank
+                    size={25}
                     className="mx-2 text-gray-400"
                     onClick={() => setIsCheckboxChecked(true)}
                   />
