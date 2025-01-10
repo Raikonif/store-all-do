@@ -16,7 +16,6 @@ interface Props {
 
 function RowTable({ item, index }: Props) {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-
   const {
     setIsFolder,
     isFolder,
@@ -26,6 +25,9 @@ function RowTable({ item, index }: Props) {
     setCurrentItem,
     setCurrentFolder,
     setIsOpenDelete,
+    checkedFilesFolders,
+    setCheckedFilesFolders,
+
   } = useContext(AdminContext);
 
   const navigateToFolder = async (folder: IFolder) => {
@@ -49,6 +51,11 @@ function RowTable({ item, index }: Props) {
   const handleChildClick = (e: MouseEvent, selected: boolean) => {
     e.stopPropagation();
     setIsCheckboxChecked(selected);
+    if (selected) {
+      setCheckedFilesFolders([...checkedFilesFolders, item]);
+    } else {
+      setCheckedFilesFolders(checkedFilesFolders.filter((file) => file.Key !== item.Key));
+    }
   };
   const handleDownloadFile = async (url: string) => {
     toast.success("Descargando archivo...");
