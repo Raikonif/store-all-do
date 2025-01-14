@@ -1,5 +1,13 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { ArrowLeftCircle, FolderPlus, LogOut, SearchIcon, UploadCloud } from "lucide-react";
+import {
+  ArrowLeftCircle,
+  Download,
+  FolderPlus,
+  LogOut,
+  SearchIcon,
+  Trash,
+  UploadCloud,
+} from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
 import Pagination from "@/components/Pagination.tsx";
@@ -36,6 +44,7 @@ function Storage() {
     currentPath,
     setCurrentPath,
     foldersFiles,
+    checkedFilesFolders,
   } = useContext(AdminContext);
 
   const { filesQuery, forceRefetch } = useFiles({ dir: currentPath });
@@ -151,23 +160,45 @@ function Storage() {
         />
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
-      <div className="flex justify-between gap-4 lg:flex-row lg:justify-end">
-        <button
-          onMouseEnter={() => handleButtonsCreation()}
-          onClick={() => setIsOpenUpload(true)}
-          className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold hover:bg-green-400 active:bg-green-300"
-        >
-          {"Subir Archivos"}
-          <UploadCloud size={20} />
-        </button>
-        <button
-          onMouseEnter={() => handleButtonsCreation()}
-          onClick={() => setIsOpenFolder(true)}
-          className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold hover:bg-cyan-400 active:bg-cyan-300"
-        >
-          {"Crear Carpeta"}
-          <FolderPlus size={20} />
-        </button>
+      <div className="flex justify-between gap-4 lg:flex-row">
+        <div className="flex gap-4">
+          {checkedFilesFolders.length !== 0 ? (
+            <>
+              <button
+                onClick={() => {}}
+                className="flex items-center gap-4 rounded-xl bg-red-500 p-3 font-semibold hover:bg-red-400 active:bg-red-300"
+              >
+                <Trash size={20} />
+              </button>
+              <button
+                onClick={() => {}}
+                className="flex items-center gap-4 rounded-xl bg-violet-500 p-3 font-semibold hover:bg-violet-400 active:bg-violet-300"
+              >
+                <Download size={20} />
+              </button>
+            </>
+          ) : (
+            <h1>Selecciona para mas acciones</h1>
+          )}
+        </div>
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <button
+            onMouseEnter={() => handleButtonsCreation()}
+            onClick={() => setIsOpenUpload(true)}
+            className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold hover:bg-green-400 active:bg-green-300"
+          >
+            {"Subir Archivos"}
+            <UploadCloud size={20} />
+          </button>
+          <button
+            onMouseEnter={() => handleButtonsCreation()}
+            onClick={() => setIsOpenFolder(true)}
+            className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold hover:bg-cyan-400 active:bg-cyan-300"
+          >
+            {"Crear Carpeta"}
+            <FolderPlus size={20} />
+          </button>
+        </div>
       </div>
       <div className="overflow-x-auto">
         {filesQuery.isLoading ? (
