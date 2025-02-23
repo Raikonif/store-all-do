@@ -140,6 +140,7 @@ function Storage() {
       }
     }
     invalidateQuery();
+    setCheckedFilesFolders([]);
     setIsAllChecked(false);
     setLoading(false);
   };
