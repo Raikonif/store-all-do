@@ -22,6 +22,7 @@ function Folder({ item, index }: Props) {
     checkedFilesFolders,
     setCurrentFolder,
     setIsOpenDelete,
+    isAllChecked,
   } = useContext(AdminContext);
 
   const handleChildClick = (e, selected) => {
@@ -60,7 +61,7 @@ function Folder({ item, index }: Props) {
     >
       <td className="flex items-center py-1 text-sm">
         <div className="flex items-center justify-center">
-          {isCheckboxChecked ? (
+          {isCheckboxChecked || isAllChecked ? (
             <MdCheckBox
               size={25}
               className="mx-2 text-gray-400"

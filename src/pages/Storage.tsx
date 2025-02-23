@@ -17,6 +17,8 @@ import { IFile } from "@/interfaces/DOFileFolder.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/services/supabase.service.ts";
+import { deleteFolderFromDOSpaces, deleteFromDOSpaces } from "@/services/do.service.ts";
+import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
 function Storage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,6 +47,9 @@ function Storage() {
     setCurrentPath,
     foldersFiles,
     checkedFilesFolders,
+    setCheckedFilesFolders,
+    isAllChecked,
+    setIsAllChecked,
   } = useContext(AdminContext);
 
   const { filesQuery, forceRefetch } = useFiles({ dir: currentPath });
@@ -123,6 +128,30 @@ function Storage() {
     (currentPage - 1) * pageSize + pageSize,
   );
 
+  // select functions
+  const deleteMultiChecked = async () => {
+    setLoading(true);
+
+    for (const item of checkedFilesFolders) {
+      if ("Prefix" in item) {
+        await deleteFolderFromDOSpaces(item.Prefix);
+      } else {
+        await deleteFromDOSpaces(item.Key);
+      }
+    }
+    invalidateQuery();
+    setIsAllChecked(false);
+    setLoading(false);
+  };
+
+  const selectAll = () => {
+    if (isAllChecked) {
+      setCheckedFilesFolders([]);
+    } else {
+      setCheckedFilesFolders(foldersFiles);
+    }
+  };
+
   useEffect(() => {
     fetchingFiles();
   }, [filesQuery.isSuccess, filesQuery.isLoading, filesQuery.data]);
@@ -161,11 +190,11 @@ function Storage() {
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
       <div className="flex justify-between gap-4 lg:flex-row">
-        <div className="flex gap-4">
+        <div className="flex h-fit gap-4">
           {checkedFilesFolders.length !== 0 ? (
             <>
               <button
-                onClick={() => {}}
+                onClick={deleteMultiChecked}
                 className="flex items-center gap-4 rounded-xl bg-red-500 p-3 font-semibold hover:bg-red-400 active:bg-red-300"
               >
                 <Trash size={20} />
@@ -223,7 +252,21 @@ function Storage() {
               <table className="m-4 w-full max-w-6xl">
                 <thead>
                   <tr className="border-b-2 border-green-500 text-left text-gray-400">
-                    <th className="pb-2 text-sm font-semibold">Nombre</th>
+                    <th className="flex items-center pb-2 text-sm font-semibold">
+                      <button
+                        onClick={() => {
+                          setIsAllChecked(!isAllChecked);
+                          selectAll();
+                        }}
+                      >
+                        {isAllChecked ? (
+                          <MdCheckBox size={25} className="mx-2 text-gray-400" />
+                        ) : (
+                          <MdOutlineCheckBoxOutlineBlank size={25} className="mx-2 text-gray-400" />
+                        )}
+                      </button>
+                      Nombre
+                    </th>
                     <th className="pb-2 text-sm font-semibold">Tamaño</th>
                     <th className="pb-2 text-sm font-semibold">Modificado</th>
                     <th className="pb-2 text-sm font-semibold">Acciones</th>

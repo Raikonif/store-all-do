@@ -28,6 +28,7 @@ function AdminProvider({ children }: Props) {
   const [foldersFiles, setFoldersFiles] = useState<(IFile | IFolder)[]>([]);
 
   const [checkedFilesFolders, setCheckedFilesFolders] = useState<(IFile | IFolder)[]>([]);
+  const [isAllChecked, setIsAllChecked] = useState(false);
 
   return (
     <AdminContext.Provider
@@ -66,6 +67,8 @@ function AdminProvider({ children }: Props) {
         setIsFolder,
         checkedFilesFolders,
         setCheckedFilesFolders,
+        isAllChecked,
+        setIsAllChecked,
       }}
     >
       {children}

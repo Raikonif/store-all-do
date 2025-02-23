@@ -36,6 +36,8 @@ interface AdminContextData {
   setFoldersFiles: (files: (IFile | IFolder)[]) => void;
   checkedFilesFolders: (IFile | IFolder)[];
   setCheckedFilesFolders: (files: (IFile | IFolder)[]) => void;
+  isAllChecked: boolean;
+  setIsAllChecked: (checked: boolean) => void;
 }
 
 const AdminContext = createContext<AdminContextData>({} as AdminContextData);

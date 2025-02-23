@@ -16,13 +16,14 @@ interface Props {
 
 function FileRow({ item, index }: Props) {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-  
+
   const {
     setIsFolder,
     setCurrentItem,
     setIsOpenDelete,
     setCheckedFilesFolders,
     checkedFilesFolders,
+    isAllChecked,
   } = useContext(AdminContext);
   const handleChildClick = (e, selected) => {
     e.stopPropagation();
@@ -63,7 +64,7 @@ function FileRow({ item, index }: Props) {
           <FolderIcon className="mr-2 text-yellow-500" size={15} />
         ) : (
           <>
-            {isCheckboxChecked ? (
+            {isCheckboxChecked || isAllChecked ? (
               <MdCheckBox
                 size={25}
                 className="mx-2 text-gray-400"
