@@ -47,17 +47,7 @@ function FileRow({ item, index }: Props) {
   const handleDownloadFile = async (path: string) => {
     toast.success("Descargando archivo...");
     try {
-      const downloadFile = await downloadFromDOSpaces(path);
-      console.log("downloadFile", downloadFile);
-      // const presignedUrl = await getPresignedUrlDOSpaces(bucketName, path);
-      // console.log("presignedUrl", presignedUrl);
-      // const filename = path.split("/").pop();
-      // const link = document.createElement("a");
-      // link.href = presignedUrl;
-      // link.setAttribute("download", filename); // Puede que no funcione en todas las configuraciones
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
+      await downloadFromDOSpaces(path);
       toast.success("Archivo descargado");
     } catch (error) {
       console.error("Error downloading file:", error);
