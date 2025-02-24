@@ -30,6 +30,9 @@ function AdminProvider({ children }: Props) {
   const [checkedFilesFolders, setCheckedFilesFolders] = useState<(IFile | IFolder)[]>([]);
   const [isAllChecked, setIsAllChecked] = useState(false);
 
+  //DO
+  const [bucketName, setBucketName] = useState("ncp-files");
+
   return (
     <AdminContext.Provider
       value={{
@@ -69,6 +72,8 @@ function AdminProvider({ children }: Props) {
         setCheckedFilesFolders,
         isAllChecked,
         setIsAllChecked,
+        bucketName,
+        setBucketName,
       }}
     >
       {children}

@@ -2,12 +2,13 @@ import { DO_SPACES_URL } from "@/constants/general.constants";
 import AdminContext from "@/context/AdminContext";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate";
 import { IFile } from "@/interfaces/DOFileFolder";
-import { downloadFromDOSpaces } from "@/services/do.service";
+import { downloadFromDOSpaces, getPresignedUrlDOSpaces } from "@/services/do.service";
 import { Download, Eye, FolderIcon, Trash } from "lucide-react";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { FaFileArchive } from "react-icons/fa";
 import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import downloadFile from "@/helpers/downloadFile.ts";
 
 interface Props {
   item: IFile;
@@ -24,6 +25,7 @@ function FileRow({ item, index }: Props) {
     setCheckedFilesFolders,
     checkedFilesFolders,
     isAllChecked,
+    bucketName,
   } = useContext(AdminContext);
   const handleChildClick = (e, selected) => {
     e.stopPropagation();
@@ -44,11 +46,25 @@ function FileRow({ item, index }: Props) {
     setCurrentItem(data as IFile);
     setIsOpenDelete(true);
   };
-  const handleDownloadFile = async (url: string) => {
+  const handleDownloadFile = async (path: string) => {
     toast.success("Descargando archivo...");
-    // downloadFile();
-    await downloadFromDOSpaces(url);
-    toast.success("Archivo descargado");
+    try {
+      const downloadFile = await downloadFromDOSpaces(path);
+      console.log("downloadFile", downloadFile);
+      // const presignedUrl = await getPresignedUrlDOSpaces(bucketName, path);
+      // console.log("presignedUrl", presignedUrl);
+      // const filename = path.split("/").pop();
+      // const link = document.createElement("a");
+      // link.href = presignedUrl;
+      // link.setAttribute("download", filename); // Puede que no funcione en todas las configuraciones
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      toast.success("Archivo descargado");
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Archivo no descargado");
+    }
   };
   const openFile = (file: IFile) => {
     window.open(DO_SPACES_URL + "/" + file.Key, "_blank");
