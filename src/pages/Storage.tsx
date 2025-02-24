@@ -1,13 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  ArrowLeftCircle,
-  Download,
-  FolderPlus,
-  LogOut,
-  SearchIcon,
-  Trash,
-  UploadCloud,
-} from "lucide-react";
+import { ArrowLeftCircle, FolderPlus, LogOut, SearchIcon, Trash, UploadCloud } from "lucide-react";
 import ListFilesView from "@/views/ListFilesView.tsx";
 import { useFiles } from "@/hooks/useFiles.tsx";
 import Pagination from "@/components/Pagination.tsx";
@@ -196,16 +188,16 @@ function Storage() {
             <>
               <button
                 onClick={deleteMultiChecked}
-                className="flex items-center gap-4 rounded-xl bg-red-500 p-3 font-semibold hover:bg-red-400 active:bg-red-300"
+                className="flex items-center gap-2 rounded-xl bg-red-500 p-2 text-sm font-semibold text-red-100 hover:bg-red-400 active:bg-red-300"
               >
-                <Trash size={20} />
+                <Trash size={18} /> Borrar Seleccionados
               </button>
-              <button
-                onClick={() => {}}
-                className="flex items-center gap-4 rounded-xl bg-violet-500 p-3 font-semibold hover:bg-violet-400 active:bg-violet-300"
-              >
-                <Download size={20} />
-              </button>
+              {/*<button*/}
+              {/*  onClick={() => {}}*/}
+              {/*  className="flex items-center gap-4 rounded-xl bg-violet-500 p-3 font-semibold hover:bg-violet-400 active:bg-violet-300"*/}
+              {/*>*/}
+              {/*  <Download size={20} />*/}
+              {/*</button>*/}
             </>
           ) : (
             <h1>Selecciona para mas acciones</h1>
