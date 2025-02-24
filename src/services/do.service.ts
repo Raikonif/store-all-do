@@ -60,9 +60,31 @@ const downloadFromDOSpaces = async (filePath: string): Promise<void> => {
     const response = await axios.get(`${BACKEND_URL}/api/files/download/${filePath}`, {
       responseType: "blob", // Important for file download
     });
+
+    const filename = filePath.split("/").pop() || "archivo";
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
     console.log("response", response);
   } catch (error) {
     console.error("Error downloading file:", error);
+  }
+};
+
+const getPresignedUrlDOSpaces = async (bucket: string, filename: string): Promise<string> => {
+  try {
+    console.log("bucket", bucket, "filename", filename);
+    const response = await axios.get(`${BACKEND_URL}/api/files/download-url/${bucket}/${filename}`);
+    return response.data.url; // La API devuelve un objeto { url: "..." }
+  } catch (error) {
+    console.error("Error getting signed URL:", error);
+    throw error;
   }
 };
 
@@ -73,4 +95,5 @@ export {
   deleteFromDOSpaces,
   deleteFolderFromDOSpaces,
   downloadFromDOSpaces,
+  getPresignedUrlDOSpaces,
 };
