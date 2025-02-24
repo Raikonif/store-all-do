@@ -2,6 +2,7 @@ import GeneralModal from "@/components/GeneralModal.tsx";
 import AdminContext from "@/context/AdminContext.tsx";
 import { useContext, useRef } from "react";
 import { createFolderDOSpaces } from "@/services/do.service.ts";
+import toast from "react-hot-toast";
 
 function ModalCreateFolder() {
   const {
@@ -18,6 +19,10 @@ function ModalCreateFolder() {
   const folderRef = useRef(null);
 
   const createFolder = async () => {
+    if (!folderName) {
+      toast.error("Folder name is required");
+      return;
+    }
     setLoading(true);
     const { data } = await createFolderDOSpaces(currentPath + folderName);
     if (data) {
@@ -37,11 +42,14 @@ function ModalCreateFolder() {
       title={"Crear Carpeta"}
       modalRef={folderRef}
     >
-      <div className="flex flex-col gap-6 p-6">
+      <div
+        className="flex flex-col gap-6 p-6"
+        onKeyDown={(e) => e.key === "Enter" && createFolder()}
+      >
         <input
           type="text"
           placeholder="Nombre de la carpeta"
-          className="rounded bg-gray-800 p-3 placeholder-gray-500 ring ring-gray-700 focus:outline-none focus:ring focus:ring-green-500"
+          className="rounded bg-gray-800 p-3 text-gray-300 placeholder-gray-400 ring ring-gray-700 focus:outline-none focus:ring focus:ring-green-500"
           value={folderName}
           onChange={(e) => setFolderName(e.target.value)}
           ref={folderRef}

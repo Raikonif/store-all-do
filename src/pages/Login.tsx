@@ -80,16 +80,19 @@ function Login() {
                 type="email"
                 autoComplete="email"
                 required
-                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-800 px-3 py-2 text-gray-600 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-800 px-3 py-2 text-gray-300 placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Correo Electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="py-4">
+            <div
+              className="py-4"
+              onKeyDown={async (e) => e.key === "Enter" && (await sendTokenToEmail())}
+            >
               <button
                 type="button"
-                onClick={async () => await sendTokenToEmail()}
+                onClick={sendTokenToEmail}
                 disabled={isLoading}
                 className="group relative flex w-full justify-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-green-300 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -133,17 +136,20 @@ function Login() {
                 type="text"
                 autoComplete="one-time-code"
                 required
-                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-700 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-800 px-3 py-2 text-gray-300 placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Código Token"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
               />
             </div>
           </div>
-          <div className={`${!openToken && "hidden"}`}>
+          <div
+            className={`${!openToken && "hidden"}`}
+            onKeyDown={(e) => e.key === "Enter" && logIn()}
+          >
             <button
               type="button"
-              onClick={() => logIn()}
+              onClick={logIn}
               disabled={isLoadingToken}
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
             >
