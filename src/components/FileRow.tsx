@@ -2,13 +2,12 @@ import { DO_SPACES_URL } from "@/constants/general.constants";
 import AdminContext from "@/context/AdminContext";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate";
 import { IFile } from "@/interfaces/DOFileFolder";
-import { downloadFromDOSpaces, getPresignedUrlDOSpaces } from "@/services/do.service";
+import { downloadFromDOSpaces } from "@/services/do.service";
 import { Download, Eye, FolderIcon, Trash } from "lucide-react";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { FaFileArchive } from "react-icons/fa";
 import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
-import downloadFile from "@/helpers/downloadFile.ts";
 
 interface Props {
   item: IFile;
@@ -25,7 +24,6 @@ function FileRow({ item, index }: Props) {
     setCheckedFilesFolders,
     checkedFilesFolders,
     isAllChecked,
-    bucketName,
   } = useContext(AdminContext);
   const handleChildClick = (e, selected) => {
     e.stopPropagation();
