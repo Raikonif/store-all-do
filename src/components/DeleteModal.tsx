@@ -64,7 +64,7 @@ function DeleteModal() {
       title={isFolder ? "Borrar Carpeta" : "Borrar Archivo"}
     >
       <div className="flex flex-col items-center justify-center gap-2 p-5">
-        <p>
+        <p className="text-white">
           {isFolder
             ? "¿Estás seguro de borrar esta carpeta y todo su contenido?"
             : "¿Estás seguro de borrar este archivo?"}
