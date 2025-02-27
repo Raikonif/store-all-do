@@ -2,7 +2,7 @@ import { DO_SPACES_URL } from "@/constants/general.constants";
 import AdminContext from "@/context/AdminContext";
 import convertToNaturalDate from "@/helpers/convertToNaturalDate";
 import { IFile } from "@/interfaces/DOFileFolder";
-import { downloadFromDOSpaces } from "@/services/do.service";
+import { downloadFromDOSpaces, getPresignedUrlDOSpaces } from "@/services/do.service";
 import { Download, Eye, FolderIcon, Trash } from "lucide-react";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
@@ -24,6 +24,7 @@ function FileRow({ item, index }: Props) {
     setCheckedFilesFolders,
     checkedFilesFolders,
     isAllChecked,
+    bucketName,
   } = useContext(AdminContext);
   const handleChildClick = (e, selected) => {
     e.stopPropagation();
@@ -47,7 +48,14 @@ function FileRow({ item, index }: Props) {
   const handleDownloadFile = async (path: string) => {
     toast.success("Descargando archivo...");
     try {
-      await downloadFromDOSpaces(path);
+      // await downloadFromDOSpaces(path);
+      const presignedUrl = await getPresignedUrlDOSpaces(bucketName, path);
+      const link = document.createElement("a");
+      link.href = presignedUrl;
+      link.download = path.split("/").pop() || "archivo";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       toast.success("Archivo descargado");
     } catch (error) {
       console.error("Error downloading file:", error);
