@@ -30,7 +30,7 @@ function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) 
   const renderPageNumbers = () => {
     const visiblePages = 5;
     const halfVisible = Math.floor(visiblePages / 2);
-    let start = currentPage - halfVisible;
+    let start = currentPage - halfVisible + 2;
     const end = Math.min(start + visiblePages - 1, totalPages);
     if (end - start + 1 < visiblePages) {
       start = Math.max(end - visiblePages + 1, 1);

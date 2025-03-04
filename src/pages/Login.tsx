@@ -70,7 +70,10 @@ function Login() {
         </div>
         <form className="mt-8 space-y-6">
           <div className="-space-y-px rounded-md shadow-sm">
-            <div className="bg-gray-700">
+            <div
+              className="bg-gray-700"
+              onKeyDown={async (e) => e.key === "Enter" && (await sendTokenToEmail())}
+            >
               <label htmlFor="email" className="sr-only">
                 Correo Electronico
               </label>
@@ -86,10 +89,7 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div
-              className="py-4"
-              onKeyDown={async (e) => e.key === "Enter" && (await sendTokenToEmail())}
-            >
+            <div className="py-4">
               <button
                 type="button"
                 onClick={sendTokenToEmail}
@@ -126,7 +126,10 @@ function Login() {
             >
               <ArrowBigDownDash />
             </div>
-            <div className={`${!openToken && "hidden"}`}>
+            <div
+              className={`${!openToken && "hidden"}`}
+              onKeyDown={(e) => e.key === "Enter" && logIn()}
+            >
               <label htmlFor="token" className="sr-only">
                 Codigo Token
               </label>
@@ -143,10 +146,7 @@ function Login() {
               />
             </div>
           </div>
-          <div
-            className={`${!openToken && "hidden"}`}
-            onKeyDown={(e) => e.key === "Enter" && logIn()}
-          >
+          <div className={`${!openToken && "hidden"}`}>
             <button
               type="button"
               onClick={logIn}
