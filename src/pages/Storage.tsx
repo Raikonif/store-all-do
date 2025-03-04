@@ -165,7 +165,7 @@ function Storage() {
           Almacenamiento de Archivos Privado
         </h1>
         <button
-          className="flex items-center gap-4 rounded-xl bg-green-500 p-2 font-semibold hover:bg-green-400 active:bg-green-300"
+          className="flex items-center gap-4 rounded-xl bg-green-500 p-2 text-sm font-semibold hover:bg-green-400 active:bg-green-300"
           onClick={async () => await logOut()}
         >
           Salir <LogOut />
@@ -183,14 +183,22 @@ function Storage() {
         <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
       </div>
       <div className="flex justify-between gap-4 lg:flex-row">
-        <div className="flex h-fit gap-4">
+        <div className="flex gap-4">
+          <div className={`${currentPath === "nandy-files/" && "hidden"}`}>
+            <button
+              onClick={() => handleBackButton()}
+              className="flex w-fit items-center gap-2 rounded-xl bg-green-500 p-2 text-sm font-semibold text-white hover:bg-green-400 active:bg-green-300"
+            >
+              <ArrowLeftCircle /> {"Atras"}
+            </button>
+          </div>
           {checkedFilesFolders.length !== 0 ? (
             <>
               <button
                 onClick={deleteMultiChecked}
-                className="flex items-center gap-2 rounded-xl bg-red-500 p-2 text-sm font-semibold text-red-100 hover:bg-red-400 active:bg-red-300"
+                className="flex items-center gap-2 whitespace-nowrap rounded-xl bg-red-500 p-2 text-sm font-semibold text-red-100 hover:bg-red-400 active:bg-red-300"
               >
-                <Trash size={18} /> Borrar Seleccionados
+                <span className="flex h-fit">Borrar Seleccionados</span> <Trash size={18} />
               </button>
               {/*<button*/}
               {/*  onClick={() => {}}*/}
@@ -200,14 +208,17 @@ function Storage() {
               {/*</button>*/}
             </>
           ) : (
-            <h1>Selecciona para mas acciones</h1>
+            <h1>{""}</h1>
           )}
+          <div className="flex w-full">
+            <p className="font-semibold text-green-500">{"Ubicación: " + currentPath}</p>
+          </div>
         </div>
         <div className="flex flex-col gap-4 lg:flex-row">
           <button
             onMouseEnter={() => handleButtonsCreation()}
             onClick={() => setIsOpenUpload(true)}
-            className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-3 font-semibold hover:bg-green-400 active:bg-green-300"
+            className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-2 text-sm font-semibold hover:bg-green-400 active:bg-green-300"
           >
             {"Subir Archivos"}
             <UploadCloud size={20} />
@@ -215,7 +226,7 @@ function Storage() {
           <button
             onMouseEnter={() => handleButtonsCreation()}
             onClick={() => setIsOpenFolder(true)}
-            className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-3 font-semibold hover:bg-cyan-400 active:bg-cyan-300"
+            className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-2 text-sm font-semibold hover:bg-cyan-400 active:bg-cyan-300"
           >
             {"Crear Carpeta"}
             <FolderPlus size={20} />
@@ -229,19 +240,7 @@ function Storage() {
           <p className="mt-4 text-center text-gray-500">Error al traer los archivos </p>
         ) : (
           <div className="flex flex-col">
-            <div className={`${currentPath === "nandy-files/" && "invisible"}`}>
-              <button
-                onClick={() => handleBackButton()}
-                className="flex gap-2 rounded-xl bg-green-500 p-3 text-center font-semibold text-white hover:bg-green-400 active:bg-green-300"
-              >
-                <ArrowLeftCircle /> {"Ir atras"}
-              </button>
-            </div>
-
             <div className="flex w-full flex-col items-center justify-center">
-              <div className="flex w-full">
-                <p className="font-semibold text-green-500">{"Ubicación: " + currentPath}</p>
-              </div>
               <table className="m-4 w-full max-w-6xl">
                 <thead>
                   <tr className="border-b-2 border-green-500 text-left text-gray-400">
