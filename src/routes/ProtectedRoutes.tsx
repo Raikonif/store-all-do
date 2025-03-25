@@ -14,7 +14,7 @@ function ProtectedRoutes({ children }: Props): ReactElement {
     const listener = supabase.auth.onAuthStateChange((_, session) => {
       if (!session) {
         setIsAuth(false);
-        localStorage.removeItem("authState");
+        sessionStorage.removeItem("authState");
         navigate("/", { state: { from: location.pathname } });
       } else {
         setIsAuth(true);

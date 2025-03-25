@@ -33,15 +33,14 @@ function Login() {
   const logIn = async () => {
     console.log("email and token", email, token);
     const { data, error } = await supabaseVerifyCodeOTP(email, token);
-    if (data) {
-      localStorage.setItem("authState", JSON.stringify({ auth: true, session: data }));
-      setUser(data.session);
-      setIsLoadingToken(false);
-      navigate(STORAGE);
-    }
     if (error) {
       console.log("error", error);
       toast.error("Error al iniciar sesión");
+    } else {
+      sessionStorage.setItem("authState", JSON.stringify({ auth: true, session: data }));
+      setUser(data.session);
+      setIsLoadingToken(false);
+      navigate(STORAGE);
     }
   };
 

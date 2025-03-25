@@ -110,7 +110,7 @@ function Storage() {
       return;
     }
     setUser({});
-    localStorage.removeItem("authState");
+    sessionStorage.removeItem("authState");
     navigate("/");
     setLoading(false);
   };
