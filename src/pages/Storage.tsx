@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/services/supabase.service.ts";
 import { deleteFolderFromDOSpaces, deleteFromDOSpaces } from "@/services/do.service.ts";
 import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import { withViewTransition } from "@/helpers/viewTransition.ts";
 
 function Storage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -68,7 +69,7 @@ function Storage() {
   };
 
   const handleSearch = useCallback(
-    (searchTermString?: string) => {
+    (searchTermString: string) => {
       setSearchTerm(searchTermString);
       if (files.length === 0) return;
       if (searchTermString !== "" && (files.length > 0 || folders.length > 0)) {
@@ -111,7 +112,7 @@ function Storage() {
     }
     setUser({});
     sessionStorage.removeItem("authState");
-    navigate("/");
+    withViewTransition(() => navigate("/"));
     setLoading(false);
   };
 
@@ -120,7 +121,6 @@ function Storage() {
     (currentPage - 1) * pageSize + pageSize,
   );
 
-  // select functions
   const deleteMultiChecked = async () => {
     setLoading(true);
 
@@ -159,92 +159,83 @@ function Storage() {
   }, [files, folders, searchTerm]);
 
   return (
-    <div className="mx-auto w-full rounded-lg bg-gray-900 p-6 shadow-lg">
-      <div className="mb-2 flex justify-between">
-        <h1 className="mb-3 text-center text-xl font-bold text-green-500 md:text-3xl">
-          Almacenamiento de Archivos Privado
-        </h1>
-        <button
-          className="flex items-center gap-4 rounded-xl bg-green-500 p-2 text-sm font-semibold hover:bg-green-400 active:bg-green-300"
-          onClick={async () => await logOut()}
-        >
-          Salir <LogOut />
+    <div className="glass-card soft-entry mx-auto w-full max-w-7xl p-4 sm:p-6">
+      <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <h1 className="text-xl font-bold text-cyan-100 sm:text-3xl">Almacenamiento de Archivos Privado</h1>
+        <button className="glass-button flex items-center gap-3 px-4 py-2 text-sm font-semibold" onClick={logOut}>
+          Salir <LogOut size={18} />
         </button>
       </div>
 
-      <div className="relative mb-6">
+      <div className="relative mb-4">
         <input
           type="text"
           placeholder="Buscar archivos..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full rounded-lg bg-gray-800 px-4 py-2 pl-10 text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full rounded-xl border border-white/25 bg-white/10 px-4 py-2.5 pl-10 text-slate-100 placeholder:text-slate-300/60 focus:border-cyan-200/80 focus:outline-none"
         />
-        <SearchIcon className="absolute left-3 top-2.5 text-gray-400" size={20} />
+        <SearchIcon className="absolute left-3 top-2.5 text-slate-200/80" size={18} />
       </div>
-      <div className="flex justify-between gap-4 lg:flex-row">
-        <div className="flex gap-4">
+
+      <div className="mb-4 flex flex-col justify-between gap-4 xl:flex-row xl:items-center">
+        <div className="flex flex-wrap items-center gap-3">
           <div className={`${currentPath === "nandy-files/" && "hidden"}`}>
-            <button
-              onClick={() => handleBackButton()}
-              className="flex w-fit items-center gap-2 rounded-xl bg-green-500 p-2 text-sm font-semibold text-white hover:bg-green-400 active:bg-green-300"
-            >
-              <ArrowLeftCircle /> {"Atras"}
+            <button onClick={handleBackButton} className="glass-button flex items-center gap-2 px-3 py-2 text-sm font-semibold">
+              <ArrowLeftCircle size={18} /> Atras
             </button>
           </div>
+
           {checkedFilesFolders.length !== 0 ? (
-            <>
-              <button
-                onClick={deleteMultiChecked}
-                className="flex items-center gap-2 whitespace-nowrap rounded-xl bg-red-500 p-2 text-sm font-semibold text-red-100 hover:bg-red-400 active:bg-red-300"
-              >
-                <span className="flex h-fit">Borrar Seleccionados</span> <Trash size={18} />
-              </button>
-              {/*<button*/}
-              {/*  onClick={() => {}}*/}
-              {/*  className="flex items-center gap-4 rounded-xl bg-violet-500 p-3 font-semibold hover:bg-violet-400 active:bg-violet-300"*/}
-              {/*>*/}
-              {/*  <Download size={20} />*/}
-              {/*</button>*/}
-            </>
+            <button
+              onClick={deleteMultiChecked}
+              className="rounded-xl border border-red-300/50 bg-red-400/20 px-3 py-2 text-sm font-semibold text-red-100 transition hover:bg-red-400/30"
+            >
+              <span className="flex items-center gap-2 whitespace-nowrap">
+                Borrar Seleccionados <Trash size={16} />
+              </span>
+            </button>
           ) : (
             <h1>{""}</h1>
           )}
-          <div className="flex w-full">
-            <p className="font-semibold text-green-500">{"Ubicación: " + currentPath}</p>
-          </div>
+
+          <p className="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-cyan-50/90">
+            {"Ubicacion: " + currentPath}
+          </p>
         </div>
-        <div className="flex flex-col gap-4 lg:flex-row">
+
+        <div className="flex flex-col gap-3 sm:flex-row">
           <button
-            onMouseEnter={() => handleButtonsCreation()}
+            onMouseEnter={handleButtonsCreation}
             onClick={() => setIsOpenUpload(true)}
-            className="flex items-center justify-between gap-4 rounded-xl bg-green-500 p-2 text-sm font-semibold hover:bg-green-400 active:bg-green-300"
+            className="glass-button flex items-center justify-between gap-3 px-3 py-2 text-sm font-semibold"
           >
-            {"Subir Archivos"}
-            <UploadCloud size={20} />
+            Subir Archivos
+            <UploadCloud size={18} />
           </button>
           <button
-            onMouseEnter={() => handleButtonsCreation()}
+            onMouseEnter={handleButtonsCreation}
             onClick={() => setIsOpenFolder(true)}
-            className="flex items-center justify-between gap-4 rounded-xl bg-cyan-500 p-2 text-sm font-semibold hover:bg-cyan-400 active:bg-cyan-300"
+            className="glass-button flex items-center justify-between gap-3 px-3 py-2 text-sm font-semibold"
           >
-            {"Crear Carpeta"}
-            <FolderPlus size={20} />
+            Crear Carpeta
+            <FolderPlus size={18} />
           </button>
         </div>
       </div>
-      <div className="overflow-x-auto">
+
+      <div className="overflow-x-auto rounded-xl border border-white/15 bg-slate-950/20">
         {filesQuery.isLoading ? (
           <CircleProgress />
         ) : filesQuery.isError ? (
-          <p className="mt-4 text-center text-gray-500">Error al traer los archivos </p>
+          <p className="py-10 text-center text-slate-300">Error al traer los archivos</p>
         ) : (
           <div className="flex flex-col">
             <div className="flex w-full flex-col items-center justify-center">
-              <table className="m-4 w-full max-w-6xl">
+              <table className="w-full max-w-6xl table-auto">
                 <thead>
-                  <tr className="border-b-2 border-green-500 text-left text-gray-400">
-                    <th className="flex items-center pb-2 text-sm font-semibold">
+                  <tr className="border-b border-cyan-100/20 text-left text-slate-300/90">
+                    <th className="flex items-center px-2 py-3 text-sm font-semibold">
                       <button
                         onClick={() => {
                           setIsAllChecked(!isAllChecked);
@@ -252,16 +243,16 @@ function Storage() {
                         }}
                       >
                         {isAllChecked ? (
-                          <MdCheckBox size={25} className="mx-2 text-gray-400" />
+                          <MdCheckBox size={25} className="mx-2 text-cyan-100/85" />
                         ) : (
-                          <MdOutlineCheckBoxOutlineBlank size={25} className="mx-2 text-gray-400" />
+                          <MdOutlineCheckBoxOutlineBlank size={25} className="mx-2 text-cyan-100/85" />
                         )}
                       </button>
                       Nombre
                     </th>
-                    <th className="pb-2 text-sm font-semibold">Tamaño</th>
-                    <th className="pb-2 text-sm font-semibold">Modificado</th>
-                    <th className="pb-2 text-sm font-semibold">Acciones</th>
+                    <th className="px-2 py-3 text-sm font-semibold">Tamano</th>
+                    <th className="px-2 py-3 text-sm font-semibold">Modificado</th>
+                    <th className="px-2 py-3 text-sm font-semibold">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>

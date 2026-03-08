@@ -4,7 +4,6 @@ interface Props {
   currentPage: number;
   totalItems: number;
   pageSize: number;
-  // eslint-disable-next-line no-unused-vars
   onPageChange: (page: number) => void;
 }
 
@@ -39,31 +38,27 @@ function Pagination({ currentPage, totalItems, pageSize, onPageChange }: Props) 
     return pageNumbers.slice(start - 1, end).map((page) => (
       <button
         key={page}
-        className={`rounded-xl px-3 py-1 ${page === currentPage ? "bg-green-500 text-white" : "border-2 border-green-500 text-green-500"}`}
+        className={`rounded-xl px-3 py-1.5 text-sm transition ${
+          page === currentPage
+            ? "border border-cyan-100/70 bg-cyan-100/20 text-cyan-50"
+            : "border border-white/25 bg-white/5 text-cyan-100/90 hover:bg-white/10"
+        }`}
         onClick={() => handlePageChange(page)}
       >
-        <a onClick={() => handlePageChange(page)} className="">
-          {page}
-        </a>
+        {page}
       </button>
     ));
   };
 
   return (
-    <div className="z-20 flex w-full items-center justify-center gap-6 pt-4">
-      <button>
-        <ArrowLeftCircle
-          className="cursor-pointer text-green-500"
-          size={30}
-          onClick={() => handlePageChange(currentPage - 1)}
-        />
+    <div className="z-20 flex w-full items-center justify-center gap-4 py-4">
+      <button onClick={() => handlePageChange(currentPage - 1)}>
+        <ArrowLeftCircle className="cursor-pointer text-cyan-100/90 transition hover:text-cyan-50" size={28} />
       </button>
       {renderPageNumbers()}
-      <ArrowRightCircle
-        className="cursor-pointer text-green-500"
-        size={30}
-        onClick={() => handlePageChange(currentPage + 1)}
-      />
+      <button onClick={() => handlePageChange(currentPage + 1)}>
+        <ArrowRightCircle className="cursor-pointer text-cyan-100/90 transition hover:text-cyan-50" size={28} />
+      </button>
     </div>
   );
 }

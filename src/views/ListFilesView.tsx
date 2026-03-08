@@ -12,7 +12,7 @@ function ListFilesView({ data }: Props) {
         data.map((item, index) => <RowTable key={index} item={item} index={index} />)
       ) : (
         <tr>
-          <td colSpan={4} className="text-center text-gray-400">
+          <td colSpan={4} className="py-8 text-center text-slate-200/80">
             No se encontraron archivos ni carpetas
           </td>
         </tr>
