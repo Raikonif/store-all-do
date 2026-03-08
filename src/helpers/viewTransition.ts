@@ -1,12 +1,10 @@
 export const withViewTransition = (callback: () => void) => {
-  const startViewTransition = (
-    document as Document & {
-      startViewTransition?: (updateCallback: () => void) => unknown;
-    }
-  ).startViewTransition;
+  const doc = document as Document & {
+    startViewTransition?: (updateCallback: () => void) => unknown;
+  };
 
-  if (typeof document !== "undefined" && startViewTransition) {
-    startViewTransition(callback);
+  if (typeof document !== "undefined" && doc.startViewTransition) {
+    doc.startViewTransition(callback);
     return;
   }
 
