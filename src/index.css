@@ -1,3 +1,150 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --bg-top: #143140;
+  --bg-mid: #0f1e2f;
+  --bg-bottom: #09111d;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-main: #d9edf9;
+  --text-muted: #93adc4;
+  --accent: #4ee3b1;
+  --accent-alt: #6dd5ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text-main);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(850px circle at 15% 10%, rgba(78, 227, 177, 0.28), transparent 55%),
+    radial-gradient(750px circle at 80% 12%, rgba(109, 213, 255, 0.2), transparent 52%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
+  background-attachment: fixed;
+}
+
+.glass-card {
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  box-shadow: 0 16px 45px rgba(0, 5, 18, 0.35);
+}
+
+.soft-float {
+  animation: floatY 7s ease-in-out infinite;
+}
+
+.soft-entry {
+  animation: fadeSlideIn 420ms ease-out;
+}
+
+.glass-button {
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 0.85rem;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08));
+  color: #eaf8ff;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.glass-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 10px 24px rgba(9, 17, 29, 0.35);
+}
+
+.glass-button:active {
+  transform: translateY(0);
+}
+
+.page-shell {
+  view-transition-name: page-shell;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: ease;
+}
+
+::view-transition-old(page-shell) {
+  animation: vtOld 320ms ease both;
+}
+
+::view-transition-new(page-shell) {
+  animation: vtNew 320ms ease both;
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes vtOld {
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(2px);
+  }
+}
+
+@keyframes vtNew {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soft-float,
+  .soft-entry {
+    animation: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-old(page-shell),
+  ::view-transition-new(page-shell) {
+    animation: none;
+  }
+}

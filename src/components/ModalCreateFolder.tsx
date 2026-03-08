@@ -42,29 +42,23 @@ function ModalCreateFolder() {
       title={"Crear Carpeta"}
       modalRef={folderRef}
     >
-      <div
-        className="flex flex-col gap-6 p-6"
-        onKeyDown={(e) => e.key === "Enter" && createFolder()}
-      >
+      <div className="flex flex-col gap-6 p-6" onKeyDown={(e) => e.key === "Enter" && createFolder()}>
         <input
           type="text"
           placeholder="Nombre de la carpeta"
-          className="rounded bg-gray-800 p-3 text-gray-300 placeholder-gray-400 ring ring-gray-700 focus:outline-none focus:ring focus:ring-green-500"
+          className="rounded-xl border border-white/30 bg-white/10 p-3 text-slate-100 placeholder:text-slate-300/60 focus:border-cyan-100/80 focus:outline-none"
           value={folderName}
           onChange={(e) => setFolderName(e.target.value)}
           ref={folderRef}
         />
         <div className="flex justify-end gap-2.5">
           <button
-            className="rounded border border-green-500 bg-transparent p-2 text-sm font-semibold text-green-500 hover:border-green-400 hover:text-green-400 active:border-green-300 active:text-green-300"
+            className="rounded-xl border border-white/30 bg-transparent px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
             onClick={() => setIsOpenFolder(false)}
           >
             Cancelar
           </button>
-          <button
-            className="rounded bg-green-500 p-2 text-sm font-semibold hover:bg-green-400 active:bg-green-300"
-            onClick={createFolder}
-          >
+          <button className="glass-button px-3 py-2 text-sm font-semibold" onClick={createFolder}>
             Crear
           </button>
         </div>

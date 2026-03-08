@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/services/supabase.service.ts";
+import { withViewTransition } from "@/helpers/viewTransition.ts";
 
 interface Props {
   children: ReactNode;
@@ -10,12 +11,13 @@ function ProtectedRoutes({ children }: Props): ReactElement {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAuth, setIsAuth] = useState<boolean>(false);
+
   useEffect(() => {
     const listener = supabase.auth.onAuthStateChange((_, session) => {
       if (!session) {
         setIsAuth(false);
         sessionStorage.removeItem("authState");
-        navigate("/", { state: { from: location.pathname } });
+        withViewTransition(() => navigate("/", { state: { from: location.pathname } }));
       } else {
         setIsAuth(true);
       }
@@ -24,6 +26,7 @@ function ProtectedRoutes({ children }: Props): ReactElement {
       listener.data.subscription.unsubscribe();
     };
   }, [location.pathname, navigate]);
+
   return <>{isAuth ? children : <h1>{"no found"}</h1>}</>;
 }
 

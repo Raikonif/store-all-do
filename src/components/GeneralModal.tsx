@@ -11,22 +11,22 @@ interface Props {
 function GeneralModal({ children, isOpen, onClose, title, modalRef }: Props) {
   return (
     <div
-      className={`${!isOpen && "hidden"} fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none`}
+      className={`${!isOpen && "hidden"} fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overflow-x-hidden p-4 outline-none focus:outline-none`}
     >
-      <div className="fixed inset-0 bg-black opacity-50" onClick={() => onClose(false)}></div>
+      <div className="fixed inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={() => onClose(false)}></div>
       <div
         ref={modalRef}
-        className="relative mx-auto my-6 w-auto max-w-3xl rounded-lg bg-gray-800 shadow-lg"
+        className="glass-card soft-entry relative mx-auto w-full max-w-3xl"
         tabIndex={-1}
       >
         <div className="flex w-full flex-col">
-          <div className="flex items-center justify-between rounded-t border-b border-gray-400 p-5">
-            <h3 className="font-semibold text-gray-400">{title}</h3>
+          <div className="flex items-center justify-between border-b border-white/20 p-5">
+            <h3 className="font-semibold text-slate-100">{title}</h3>
             <button
-              className="ml-auto border-0 bg-transparent p-1 text-2xl font-semibold leading-none text-gray-400 outline-none focus:outline-none"
+              className="ml-auto rounded-md border border-white/15 bg-white/10 p-1 text-xl font-semibold leading-none text-slate-100 transition hover:bg-white/20"
               onClick={() => onClose(false)}
             >
-              <span className="text-gray-00 block h-6 w-6 outline-none focus:outline-none">×</span>
+              <span className="block h-6 w-6 text-center outline-none focus:outline-none">×</span>
             </button>
           </div>
           {children}

@@ -5,6 +5,7 @@ import { STORAGE } from "@/constants/general.constants.ts";
 import { supabaseAuth, supabaseVerifyCodeOTP } from "@/services/supabase.service.ts";
 import toast from "react-hot-toast";
 import AdminContext from "@/context/AdminContext.tsx";
+import { withViewTransition } from "@/helpers/viewTransition.ts";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -20,28 +21,35 @@ function Login() {
   const sendTokenToEmail = async () => {
     setIsLoading(true);
     const { data, error } = await supabaseAuth(email);
+
     if (data) {
       setOpenToken(true);
       toast.success("Magic Link enviado a tu correo");
     }
+
     if (error) {
       console.log("error", error);
       toast.error("Error al enviar el Magic Link");
     }
+
+    setIsLoading(false);
   };
 
   const logIn = async () => {
-    console.log("email and token", email, token);
+    setIsLoadingToken(true);
+
     const { data, error } = await supabaseVerifyCodeOTP(email, token);
     if (error) {
       console.log("error", error);
       toast.error("Error al iniciar sesión");
-    } else {
-      sessionStorage.setItem("authState", JSON.stringify({ auth: true, session: data }));
-      setUser(data.session);
       setIsLoadingToken(false);
-      navigate(STORAGE);
+      return;
     }
+
+    sessionStorage.setItem("authState", JSON.stringify({ auth: true, session: data }));
+    setUser(data.session);
+    setIsLoadingToken(false);
+    withViewTransition(() => navigate(STORAGE));
   };
 
   const checkCookies = () => {
@@ -52,129 +60,93 @@ function Login() {
   useEffect(() => {
     const isAuthenticated = checkCookies();
     if (isAuthenticated) {
-      navigate(STORAGE);
+      withViewTransition(() => navigate(STORAGE));
     }
   }, [navigate]);
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-gray-900 px-4 sm:px-6 md:py-12 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-300 md:mt-6">
-            Iniciar Sesión
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-400">
-            Pon tu email e ingresa el codigo enviado a tu correo
-          </p>
+    <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-md items-center justify-center px-2 sm:px-6">
+      <div className="glass-card soft-entry w-full space-y-7 p-6 sm:p-8">
+        <div className="space-y-2 text-center">
+          <p className="text-xs uppercase tracking-[0.25em] text-cyan-200/80">Store All DO</p>
+          <h2 className="text-3xl font-extrabold text-slate-100">Iniciar Sesion</h2>
+          <p className="text-sm text-slate-300/80">Pon tu email e ingresa el codigo enviado a tu correo</p>
         </div>
-        <form className="mt-8 space-y-6">
-          <div className="-space-y-px rounded-md shadow-sm">
-            <div
-              className="bg-gray-700"
-              onKeyDown={async (e) => e.key === "Enter" && (await sendTokenToEmail())}
-            >
-              <label htmlFor="email" className="sr-only">
-                Correo Electronico
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-800 px-3 py-2 text-gray-300 placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Correo Electrónico"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="py-4">
-              <button
-                type="button"
-                onClick={sendTokenToEmail}
-                disabled={isLoading}
-                className="group relative flex w-full justify-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-green-300 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <svg
-                    className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                ) : null}
-                {isLoading ? "Enviando Codigo a tu Correo..." : "Enviar Codigo"}
-              </button>
-            </div>
-            <div
-              className={`${!openToken && "hidden"} flex w-full animate-bounce items-center justify-center text-green-500`}
-            >
-              <ArrowBigDownDash />
-            </div>
-            <div
-              className={`${!openToken && "hidden"}`}
-              onKeyDown={(e) => e.key === "Enter" && logIn()}
-            >
-              <label htmlFor="token" className="sr-only">
-                Codigo Token
-              </label>
-              <input
-                id="token"
-                name="token"
-                type="text"
-                autoComplete="one-time-code"
-                required
-                className="relative block w-full appearance-none rounded-md border border-gray-300 bg-gray-800 px-3 py-2 text-gray-300 placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Código Token"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-              />
-            </div>
+
+        <form className="space-y-4">
+          <div
+            className="space-y-3"
+            onKeyDown={async (e) => e.key === "Enter" && (await sendTokenToEmail())}
+          >
+            <label htmlFor="email" className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100/70">
+              Correo
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="w-full rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-slate-100 placeholder:text-slate-300/60 focus:border-cyan-200/80 focus:outline-none"
+              placeholder="Correo Electronico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
+
+          <button
+            type="button"
+            onClick={sendTokenToEmail}
+            disabled={isLoading}
+            className="glass-button flex w-full items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isLoading ? (
+              <svg
+                className="h-4 w-4 animate-spin"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path
+                  className="opacity-90"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+            ) : null}
+            {isLoading ? "Enviando codigo..." : "Enviar Codigo"}
+          </button>
+
+          <div className={`${!openToken && "hidden"} soft-float flex w-full items-center justify-center text-cyan-200`}>
+            <ArrowBigDownDash />
+          </div>
+
+          <div className={`${!openToken && "hidden"} space-y-3`} onKeyDown={(e) => e.key === "Enter" && logIn()}>
+            <label htmlFor="token" className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100/70">
+              Token
+            </label>
+            <input
+              id="token"
+              name="token"
+              type="text"
+              autoComplete="one-time-code"
+              required
+              className="w-full rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-slate-100 placeholder:text-slate-300/60 focus:border-cyan-200/80 focus:outline-none"
+              placeholder="Codigo Token"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+            />
+          </div>
+
           <div className={`${!openToken && "hidden"}`}>
             <button
               type="button"
               onClick={logIn}
               disabled={isLoadingToken}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50"
+              className="glass-button w-full px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isLoadingToken ? (
-                <svg
-                  className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : null}
-              {isLoadingToken ? "Iniciando Sesión..." : "Iniciar Sesión"}
+              {isLoadingToken ? "Iniciando Sesion..." : "Iniciar Sesion"}
             </button>
           </div>
         </form>
